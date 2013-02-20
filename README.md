@@ -1,4 +1,4 @@
-echidna-ui
+Echidna UI
 ==========
 
-echidna-ui
+UI components for Echidna
