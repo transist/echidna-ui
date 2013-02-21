@@ -36,7 +36,13 @@ app.controller('MainCtrl', function($scope) {
     $scope.outCallback = function(event, ui) {
       console.log('I`m not, hehe');
     };
+});
 
+app.controller('StreamCtrl', function($scope, $http) {
 
+    $http.get('data/keywords.json').success(function(data) {
+        $scope.data = data;
+        // console.log (data);
+    });
 });
 
