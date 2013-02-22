@@ -41,14 +41,15 @@ app.controller('MainCtrl', function($scope, $http) {
 
 app.controller('StreamCtrl', function($scope, $http) {
     
-    $scope.streamItemsLen = 5; // number of y values
+    $scope.streamSize = 5; // number of keywords (y values)
+    $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
+
 
     // Let's simulate stream 
     $scope.data= []; // array to store all values
-    var streamLength = 30; // number of x values; max length of data stream
 
     // init with first values
-    parseStream( $scope.streamItemsLen, streamLength, function( initData ) {
+    parseStream( $scope.streamSize, $scope.streamLength, function( initData ) {
 
         $scope.data=initData;
 
@@ -60,7 +61,7 @@ app.controller('StreamCtrl', function($scope, $http) {
     // Let's stream some randomness
     setInterval(function(){ // tick every second with fake data
 
-        parseStream( $scope.streamItemsLen, streamLength, function( initData ) {
+        parseStream( $scope.streamSize, $scope.streamLength, function( initData ) {
 
             $scope.data=initData;
 
@@ -68,19 +69,46 @@ app.controller('StreamCtrl', function($scope, $http) {
 
     },1000);
         
-    console.log($scope)
-    
+    // -------------------------------
+    // Utils controls for stream
+
+    // play/stop
     $scope.startStopStream = function startStopStream () {
         $scope.streaming = ($scope.streaming) ? false : true;
         // console.log($scope.streaming);
         return $scope.streaming;
     }
 
-    $scope.setStreamLen = function setStreamLen (size) {
 
-        $scope.streamItemsLen = size;
-        console.log("$scope.streamItemsLen : "+$scope.streamItemsLen);
+    // set number of keywords
+    $scope.setStreamSize = function setStreamSize (size) {
+
+        $scope.streamSize = size;
+        console.log("$scope.streamSize : "+$scope.streamSize);
     }
+        
+    
+    // set time granularity
+    $scope.setStreamLength = function setStreamLength (size) {
+        $scope.streamLength = size;
+        console.log("$scope.streamLength : "+$scope.streamLength);
+
+    } 
+
+    $scope.timeframes = [  
+        {"name": "30 s", "value": "30"},  
+        {"name": "1 min", "value": "60"},
+        {"name": "10 min", "value": "600"},
+        {"name": "30 min", "value": "1800"},
+        {"name": "1 h", "value": "3600"},
+        {"name": "2h", "value": "7200"},
+        {"name": "3h", "value": "10800"},
+        {"name": "10h", "value": "36000"},
+        {"name": "1 day", "value": "86400"},
+        {"name": "7 day", "value": "604800"}
+    ]
+
+
 
 });
 
