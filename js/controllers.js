@@ -108,12 +108,7 @@ app.controller('StreamCtrl', function($scope, $http) {
         {"name": "7 day", "value": "604800"}
     ]
 
-
-
 });
-
-
-
 
 
 function parseStream( numberItems, streamLength, callback ) {
@@ -148,6 +143,7 @@ function parseStream( numberItems, streamLength, callback ) {
         };
 
     })
+
 
     callback(keywords);
 }
