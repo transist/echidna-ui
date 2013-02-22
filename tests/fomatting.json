@@ -1,0 +1,34 @@
+echidna:keywords {
+
+    "timeMin" : 1361428430,
+    "timeMax ": 1361425429,
+    "sliceid": "sliceid (redis id?)", 
+    "keywords" : [
+            {
+                "keyword"   : "blabla",  
+                "series"    : [
+                    {"count" : 72, "timestamp" : 1361425429 }
+                    {"count" : 71, "timestamp" : 1361425428 }
+
+                ]
+                
+            }
+        ]
+
+}
+
+
+echidna:keywords {
+    "timeMin" : 1361428430,
+    "timeMax ": 1361425429,
+    "totalItems" : 20,
+    "keywords" : [
+        {
+            "keyword": "<KEYWORD>",
+            "samplesrcid": "<ONE MATCHING SOURCE POST ID>",
+            "count" : "<TOTAL ACCUMULATED COUNT FOR TIME PERIOD>",
+            "sliceid" : "sliceid"
+        }
+
+    ]
+}

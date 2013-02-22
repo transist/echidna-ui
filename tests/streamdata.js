@@ -1,3 +1,12 @@
+function startStream(numberItems) {
+  
+  setInterval( function() {
+      var data = stream_layers(numberItems,4,85);
+      console.log(data);
+  }, 1000);
+
+}
+
 /* Inspired by Lee Byron's test data generator. */
 function stream_layers(n, m, o) {
   if (arguments.length < 3) o = 0;

@@ -1,4 +1,3 @@
-
 //a variable matching the name of your app may sometimes be required by angular
 var hello = {};
 
