@@ -24,6 +24,8 @@
 
   <!-- <script src="http://d3js.org/d3.v2.js"></script> -->
   <script src="lib/d3/d3.v2.min.js"></script>
+
+  <!--
   <script src="lib/d3/nv.d3.js"></script>
   <script src="lib/d3/nvd3/utils.js"></script>
   <script src="lib/d3/nvd3/axis.js"></script>
@@ -33,6 +35,18 @@
   <script src="lib/d3/nvd3/scatter.js"></script>
   <script src="lib/d3/nvd3/stackedArea.js"></script>
   <script src="lib/d3/nvd3/stackedAreaChart.js"></script>
+  -->
+
+  <script src="lib/nvd3/nv.d3.js"></script>
+  <script src="lib/nvd3/src/utils.js"></script>
+  <script src="lib/nvd3/src/tooltip.js"></script>
+  
+  <script src="lib/nvd3/src/models/axis.js"></script>
+  <script src="lib/nvd3/src/models/legend.js"></script>
+  <script src="lib/nvd3/src/models/axis.js"></script>
+  <script src="lib/nvd3/src/models/scatter.js"></script>
+  <script src="lib/nvd3/src/models/stackedArea.js"></script>
+  <script src="lib/nvd3/src/models/stackedAreaChart.js"></script>
   
   <!-- Generate fake data -->
   <script src="data/streamdata.js"></script>
@@ -169,10 +183,6 @@
             <input id="slider2" type ="range" min ="100" max="500" step ="50" value ="100"/>
           </li>
         </ul>
-
-
-
-
       </div>
       <stream-viz val="data"></stream-viz>
     </div>

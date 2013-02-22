@@ -1,6 +1,4 @@
 // directives.js
-var chart;
-
 app.directive('streamViz', function () {
 
     return {
@@ -10,15 +8,24 @@ app.directive('streamViz', function () {
           val: '='
         },
         link: function (scope, element, attrs) {
-            // console.log(scope);
+            console.log(scope.$parent.data);
             createSVG(scope, element);
-            scope.$watch('val', initGraph, true);
+            
+
+            initGraph(scope, function(chart) {
+                scope.chart = chart;
+                // scope.$watch('val', updateGraph, true);
+            });
+            
+
             setInterval(function () {
-                // console.log("tick")
-                updateGraph(scope);
+                console.log(scope.$parent.data)
+                if (scope.$parent.streaming) updateGraph(scope.$parent.data, scope);
+                // if(scope.streaming == true) {
+                    // return updateGraph(scope.val, scope);
+                // }
+
             }, 1000)
-            
-            
 
         }
     }
@@ -38,52 +45,51 @@ function createSVG(scope, element){
 }
 
 
-function initGraph(newVal, oldVal, scope) {
-    console.log(newVal);
+function initGraph(scope, callback) {
 
     // constants
     var colors = d3.scale.category20();
     keyColor = function(d, i) {return colors(i)};
-    scope.chart = {};
 
     nv.addGraph(function() {
 
-        scope.chart = nv.models.stackedAreaChart()
+        var chart = nv.models.stackedAreaChart()
                       .x( function(d) { return d[1] } )
                       .y( function(d) { return d[0] } )
                       .color(keyColor)
                       // .clipEdge(true);
         // console.log(scope.chart);
-        scope.chart.xAxis
+        chart.xAxis
             .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
 
-        scope.chart.yAxis
+        chart.yAxis
             .tickFormat(d3.format(',.2f'));
 
-        scope.svg
-          .datum( newVal )
-            .transition().duration(500).call(scope.chart);
+         scope.svg
+              .datum( scope.val )
+                .transition().duration(500).call(chart);
 
-        nv.utils.windowResize(scope.chart.update);
+
+
+        nv.utils.windowResize(chart.update);
         
-
-        return scope.chart;
+        callback(chart);
 
     });
 
 }
 
-function updateGraph (scope) {
+function updateGraph (val, scope) {
 
-    // console.log("graph updated");
+    console.log("graph updated");
     // console.log(scope)
     // chart.stacked.scatter.clipVoronoi(false);
     
-    // console.log(scope)
+    // console.log(scope.val)
     // console.log(newVal, oldVal);
 
     scope.svg
-      .datum( scope.val )
+      .datum( val )
         .transition().duration(500).call(scope.chart);
 
     // scope.chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); });

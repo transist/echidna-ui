@@ -43,37 +43,32 @@ app.controller('StreamCtrl', function($scope, $http) {
     
     $scope.streamItemsLen = 5; // number of y values
 
-
     // Let's simulate stream 
     $scope.data= []; // array to store all values
     var streamLength = 30; // number of x values; max length of data stream
 
     // init with first values
-    initStream( $scope.streamItemsLen, streamLength, function( initData ) {
-        
+    parseStream( $scope.streamItemsLen, streamLength, function( initData ) {
+
         $scope.data=initData;
 
     } )
 
-    // 
-    $scope.streaming = false; // to start/stop streaming
-
+    // to start/stop streaming
+    $scope.streaming = false; 
     
     // Let's stream some randomness
     setInterval(function(){ // tick every second with fake data
-            
-        if($scope.streaming == true) {
 
-            generateData($scope.streamItemsLen, function(newPoint) {
+        parseStream( $scope.streamItemsLen, streamLength, function( initData ) {
 
-                addPoint(newPoint, $scope.data, function (newData) {
-                    $scope.data= newData;
-                    
-                });
-            }) 
-        }
+            $scope.data=initData;
+
+    } )
+
     },1000);
         
+    console.log($scope)
     
     $scope.startStopStream = function startStopStream () {
         $scope.streaming = ($scope.streaming) ? false : true;
@@ -82,6 +77,7 @@ app.controller('StreamCtrl', function($scope, $http) {
     }
 
     $scope.setStreamLen = function setStreamLen (size) {
+
         $scope.streamItemsLen = size;
         console.log("$scope.streamItemsLen : "+$scope.streamItemsLen);
     }
@@ -90,8 +86,11 @@ app.controller('StreamCtrl', function($scope, $http) {
 
 
 
-function initStream( numberItems, streamLength, callback ) {
 
+
+function parseStream( numberItems, streamLength, callback ) {
+
+    // Generate initial data
     var keywords = [];
 
     // build empty keywords
@@ -105,29 +104,28 @@ function initStream( numberItems, streamLength, callback ) {
 
     };
 
-    // // Generate initial data
-    for (var j = 0; j < streamLength; j++) {
+    generateStream( numberItems, streamLength, function(data) {
+        // format data
+        // console.log (data);
 
-        generateData(numberItems, function(data) {
-            // format data
-            
-            for (var i = 0; i < numberItems; i++) {
+        for (var i = 0; i < numberItems; i++) {
 
-                keywords[i].key = data[i].keyword;
-
-                // var slice = data[i].sliceid +i*1000;
-
-                keywords[i].values.push( [data[i].count, data[i].sliceid])
-
+            for (var j = 0; j < streamLength; j++) {
+                data[i]
+                keywords[i].key = data[j][i].keyword;
+                keywords[i].values.push( [data[j][i].count, data[j][i].sliceid])
+                
             };
 
-        })
-    }
+        };
+
+    })
 
     callback(keywords);
 }
 
 function addPoint (newPoint, streamData, callback) {
+    console.log(streamData[0].values.length)
 
     for (var i = 0; i < newPoint.length; i++) { //loop through each keywords
 
