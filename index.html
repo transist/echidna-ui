@@ -152,6 +152,28 @@
     </div>
 
     <div id="flow" ng-controller="StreamCtrl">
+      <div id="streamUtils">
+        <ul class="unstyled inline">
+          <li>
+            <div class="btn" ng-click="startStopStream()">
+              <i ng-class="{true:'icon-pause', false:'icon-play'}[streaming]"></i>
+            </div>
+          
+          </li>
+          <li>
+            <p>Qty of keywords  (1 to 20): 
+              <input type="number" name="stream-items-len" min="1" max="20" value="{{streamItemsLen}}" ng-model="streamItemsLen" ng-change="setStreamLen(streamItemsLen)">
+            </p>
+          </li>
+          <li>
+            <input id="slider2" type ="range" min ="100" max="500" step ="50" value ="100"/>
+          </li>
+        </ul>
+
+
+
+
+      </div>
       <stream-viz val="data"></stream-viz>
     </div>
 

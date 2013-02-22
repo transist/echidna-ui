@@ -1,4 +1,3 @@
-
 var randomKeywords  = [
   "activity",
   "Alaska",
@@ -139,8 +138,8 @@ function generateData (numberItems, callback) {
     var kw = {
       keyword : randomKeywords[i],
       samplesrcid : "blablabla",
-      count : (i*5)*Math.random(),
-      sliceid : Math.round(new Date().getTime() / 1000)
+      count : (i*5)*Math.random() +12.5,
+      sliceid : Math.round(Date.now() / 1000) // + Math.random()*2
     };
 
     kws.push(kw);

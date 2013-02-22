@@ -12,9 +12,9 @@ app.directive('streamViz', function () {
         link: function (scope, element, attrs) {
             // console.log(scope);
             createSVG(scope, element);
-
+            scope.$watch('val', initGraph, true);
             setInterval(function () {
-                console.log("tick")
+                // console.log("tick")
                 updateGraph(scope);
             }, 1000)
             
@@ -32,7 +32,6 @@ function createSVG(scope, element){
     // console.log('ha');
     if (!(scope.svg != null)) {
         scope.svg = d3.select(element[0]).append("svg").attr("width", scope.w).attr("height", scope.h);
-        scope.$watch('val', initGraph, true);
         return;
     }
 

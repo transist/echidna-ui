@@ -41,14 +41,58 @@ app.controller('MainCtrl', function($scope, $http) {
 
 app.controller('StreamCtrl', function($scope, $http) {
     
-    var numberItems = 5; // number of y values
+    $scope.streamItemsLen = 5; // number of y values
 
 
     // Let's simulate stream 
     $scope.data= []; // array to store all values
     var streamLength = 30; // number of x values; max length of data stream
 
-    // var keywords = [];
+    // init with first values
+    initStream( $scope.streamItemsLen, streamLength, function( initData ) {
+        
+        $scope.data=initData;
+
+    } )
+
+    // 
+    $scope.streaming = false; // to start/stop streaming
+
+    
+    // Let's stream some randomness
+    setInterval(function(){ // tick every second with fake data
+            
+        if($scope.streaming == true) {
+
+            generateData($scope.streamItemsLen, function(newPoint) {
+
+                addPoint(newPoint, $scope.data, function (newData) {
+                    $scope.data= newData;
+                    
+                });
+            }) 
+        }
+    },1000);
+        
+    
+    $scope.startStopStream = function startStopStream () {
+        $scope.streaming = ($scope.streaming) ? false : true;
+        // console.log($scope.streaming);
+        return $scope.streaming;
+    }
+
+    $scope.setStreamLen = function setStreamLen (size) {
+        $scope.streamItemsLen = size;
+        console.log("$scope.streamItemsLen : "+$scope.streamItemsLen);
+    }
+
+});
+
+
+
+function initStream( numberItems, streamLength, callback ) {
+
+    var keywords = [];
 
     // build empty keywords
     for (var i = 0; i < numberItems; i++) {
@@ -57,48 +101,40 @@ app.controller('StreamCtrl', function($scope, $http) {
         keyword.key = "";
         keyword.values = [];
         keyword.sample = {};
-        $scope.data.push(keyword);
+        keywords.push(keyword);
 
     };
 
-    // Generate inital data
-    for (var i = 0; i < streamLength; i++) {
+    // // Generate initial data
+    for (var j = 0; j < streamLength; j++) {
+
         generateData(numberItems, function(data) {
             // format data
             
             for (var i = 0; i < numberItems; i++) {
 
-                $scope.data[i].key = data[i].keyword;
-                $scope.data[i].values.push([data[i].count,data[i].sliceid])
+                keywords[i].key = data[i].keyword;
+
+                // var slice = data[i].sliceid +i*1000;
+
+                keywords[i].values.push( [data[i].count, data[i].sliceid])
 
             };
 
         })
     }
 
-    // console.log($scope.data)
+    callback(keywords);
+}
 
-    // console.log(datastream);
-    // console.log($scope.datastream.length);
+function addPoint (newPoint, streamData, callback) {
 
-    // Let's stream some randomness
-    setInterval(function(){ // tick every second with fake data
+    for (var i = 0; i < newPoint.length; i++) { //loop through each keywords
 
-        generateData(numberItems, function(incomingData) {// callback
-                // console.log(incomingData);
+        streamData[i].values.shift(); // trim first point
 
-                for (var i = 0; i < numberItems; i++) { //loop through each keywords
+        //populate with the new value
+        streamData[i].values.push([newPoint[i].count,newPoint[i].sliceid])
 
-                    $scope.data[i].values.shift(); // trim first point
-
-                    //populate with the new value
-                    $scope.data[i].values.push([incomingData[i].count,incomingData[i].sliceid])
-
-                };
-
-            // console.log($scope.data[0].values[0]);
-
-        }) },1000);
-
-
-});
+    };
+}
