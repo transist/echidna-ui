@@ -8,18 +8,20 @@ app.directive('streamViz', function () {
           val: '='
         },
         link: function (scope, element, attrs) {
-            console.log(scope.$parent.data);
+            // console.log(scope.$parent.data);
             createSVG(scope, element);
             
-
             initGraph(scope, function(chart) {
                 scope.chart = chart;
+                // console.log(chart.stacked)
                 // scope.$watch('val', updateGraph, true);
+                // console.log( scope.chart.legend.width(10) );
+                // scope.chart.legend.width(10) ;
             });
             
 
             setInterval(function () {
-                console.log(scope.$parent.data)
+                // console.log(scope.$parent.data)
                 if (scope.$parent.streaming) updateGraph(scope.$parent.data, scope);
                 // if(scope.streaming == true) {
                     // return updateGraph(scope.val, scope);
@@ -38,18 +40,23 @@ function createSVG(scope, element){
     scope.h = 200;
     // console.log('ha');
     if (!(scope.svg != null)) {
-        scope.svg = d3.select(element[0]).append("svg").attr("width", scope.w).attr("height", scope.h);
+        scope.svg = d3.select(element[0]).append("svg").attr("width", scope.w).attr("height", scope.h).attr("id", "stream-viz");
         return;
     }
 
 }
 
-
 function initGraph(scope, callback) {
 
     // constants
     var colors = d3.scale.category20();
-    keyColor = function(d, i) {return colors(i)};
+    keyColor = function(d, i) {
+        // scope.$parent.colors.push(colors(i));
+        // console.log(colors(i));
+        return colors(i);
+    };
+
+    // console.log (scope.$parent.colors);
 
     nv.addGraph(function() {
 
@@ -57,6 +64,8 @@ function initGraph(scope, callback) {
                       .x( function(d) { return d[1] } )
                       .y( function(d) { return d[0] } )
                       .color(keyColor)
+                      .showLegend(false)
+                      // .attr("id", function(d) { return d[1] })
                       // .clipEdge(true);
         // console.log(scope.chart);
         chart.xAxis
@@ -72,7 +81,19 @@ function initGraph(scope, callback) {
 
 
         nv.utils.windowResize(chart.update);
+
+
+
+        // MOUSE ACTIONS
+
+        // chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); });
+
+        // chart.legend.dispatch.on('legendMouseover', function(e) { nv.log('New stateChange:', JSON.stringify(e)); }
         
+        
+
+
+
         callback(chart);
 
     });
@@ -96,12 +117,12 @@ function updateGraph (val, scope) {
     // scope.chart.dispatch.on('changeState', function(e) { nv.log('New changeState:', JSON.stringify(e)); });
 }
 
-
-app.directive('btnClick', function($document, mouse){
+// Mouse events
+app.directive('btnClick', function( $document, mouse){
     
     // Mouse Handle Actions
 
-    // console.log(scope.chart.legend);
+    console.log(scope.chart.legend);
     
     scope.chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); });
 

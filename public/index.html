@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>AngularUI test</title>
+  <title>Echidna UI</title>
   
   <!-- <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/base/jquery-ui.css"> -->
   <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -127,14 +127,22 @@
 
     <div id="content" class="row-fluid">
       
-      <div class="span6">Here goes some missing stuff</div>
+      <div class="span6">Here goes some missing stuff
+        <p>to bind both d3 and dashboard I should bind data directly to keywords</p>
+        <ul>
+          <li>use gh-bind for each keywords to store data see here : http://jsfiddle.net/hKxmJ/6/</li>
+          <li>add a boolean "state" property to the object (disbaled/enabled) to make stream</li>
+          <li></li>
+        </ul>
+    
+      </div>
       <div class="span6 well row">
         <!-- <h3>Your list</h3> -->
           <div id="final-list" data-drop="true" ng-model='list' jqyoui-droppable="{ multiple:true  }">          
             <!-- <div ui:sortable class="unstyled row"> -->
             <ul class="unstyled">
                 <li class="btn btn-info btn-dragabble" ng-repeat="item in list" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list" jqyoui-draggable="{index: {{$index}},animate:true}">
-                    {{item.key}}
+                    {{item}}
                 </li>
             </ul>
           </div>
@@ -147,52 +155,56 @@
       </div>
     </div>
     
-    <div id="keywords" class="row-fluid">
-      <div class="offset1"></div>
-      <div class="span1">
-        <a href="" class="prev-keywords"><i class="icon-large icon-step-backward"></i></a>
-      </div>
-      <div id="keywords-list" class="span9">
-        <div class="btn btn-draggable" ng-repeat="item in keywords" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" ng-model="keywords" jqyoui-draggable="{index: {{$index}}, animate:true}">
-          
-          {{keywords[$index].key}}
-
-        </div>
-      </div>
-
-      <div class="span1">
-        <a href="" class="next-keywords"><i class="icon-large icon-step-forward"></i></a>
-      </div>
-    </div>
 
     <div id="flow" ng-controller="StreamCtrl">
-      <div id="streamUtils" class="row-fluid">
-        <div class="span1"></div>
-        <ul class="unstyled inline">
-          <li class="span1">
-            <div class="btn" ng-click="startStopStream()">
-              <i ng-class="{true:'icon-pause', false:'icon-play'}[streaming]"></i>
+
+        <div id="streamUtils" class="row-fluid">
+          <div class="span1"></div>
+          <ul class="unstyled inline">
+            <li class="span1">
+              <div class="btn" ng-click="startStopStream()">
+                <i ng-class="{true:'icon-pause', false:'icon-play'}[streaming]"></i>
+              </div>
+            
+            </li>
+            <li class="span2">
+              <p>Qty of keywords  (1 to 20): 
+                <input type="number" name="stream-items-len" min="1" max="20" value="{{streamSize}}" ng-model="streamSize" ng-change="setStreamSize(streamSize)">
+              </p>
+            </li>
+            <li class="span2">
+              <p>Granularity: {{streamLength}} %
+                <input id="slider2" type ="range" min ="10" max="100" step ="10" value ="{streamLength}" ng-model="streamLength" ng-change="setStreamLength(streamLength)"/>
+              </p>
+            </li>
+            <li class="span2">
+              <p>Timeframe: 
+                <input id="slider2" type ="range" min ="10" max="100" step ="10"/>
+              </p>
+            </li>
+          </ul>
+        </div>
+        
+        <div id="keywords" class="row-fluid">
+          <div class="offset1"></div>
+          <!-- <div class="span1">
+            <a href="" class="prev-keywords"><i class="icon-large icon-step-backward"></i></a>
+          </div> -->
+          <div id="keywords-list" class="span9">
+
+            <div class="btn btn-draggable" ng-repeat="item in keywords" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" ng-click="btnClick(item)" ng-model="keywords" jqyoui-draggable="{index: {{$index}}, animate:true}">
+              
+              {{item}}
+
             </div>
-          
-          </li>
-          <li class="span2">
-            <p>Qty of keywords  (1 to 20): 
-              <input type="number" name="stream-items-len" min="1" max="20" value="{{streamSize}}" ng-model="streamSize" ng-change="setStreamSize(streamSize)">
-            </p>
-          </li>
-          <li class="span2">
-            <p>Granularity: {{streamLength}} %
-              <input id="slider2" type ="range" min ="10" max="100" step ="10" value ="{streamLength}" ng-model="streamLength" ng-change="setStreamLength(streamLength)"/>
-            </p>
-          </li>
-          <li class="span2">
-            <p>Timeframe: 
-              <input id="slider2" type ="range" min ="10" max="100" step ="10"/>
-            </p>
-          </li>
-        </ul>
-      </div>
-      <stream-viz val="data"></stream-viz>
+          </div>
+
+         <!--  <div class="span1">
+            <a href="" class="next-keywords"><i class="icon-large icon-step-forward"></i></a>
+          </div> -->
+        </div>
+
+        <stream-viz val="data"></stream-viz>
     </div>
 
   </div>

@@ -3,15 +3,16 @@
 app.controller('MainCtrl', function($scope, $http) {
     
     $scope.name = 'World';
+    $scope.keywords = []; // array to store keywords text
+    $scope.colors = []; // global array to store keywords color
 
-    $http.get('data/keywords.json').success(function(data) {
-        $scope.keywords = data;
-        // console.log (data);
-    });
+    // $http.get('data/keywords.json').success(function(data) {
+    //     // console.log (data);
+    // });
 
-    $scope.list = [{ 'key': 'test', 'drag': true },];    
+    $scope.list = [ 'drag me'];    
     
-    // console.log($scope);
+    // console.log($scope.keywords.length);
     // Drag 'n drop callbacks
         $scope.startCallback = function(event, ui) {
             console.log('You started draggin');
@@ -44,6 +45,46 @@ app.controller('StreamCtrl', function($scope, $http) {
     $scope.streamSize = 5; // number of keywords (y values)
     $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
 
+    $scope.btnClick = function btnClick(item) {
+        // console.log("nv d3");
+        
+        // console.log(item);
+
+        // class(item)
+
+        var svg = d3.select("#stream-viz")
+            .attr("class", "blabla")
+
+        svg.each(function(data) {
+
+            var container = d3.select(this);
+
+            // console.log(container);
+            // console.log(d)
+            // d.disabled = !d.disabled;
+
+            data.map(function(d) {
+                if(d.key == item) d.disabled =true; //console.log(d);
+                console.log(d.disabled)
+                // d.disabled = false;
+                return d;
+            });
+
+            // chart(selection);
+            
+            // console.log()
+            // svg.transition().call(chart)
+            // chart(svg);
+
+        })
+
+
+          // .style('fill', function(d,i) { return d.color || color(d,i)})
+          // .style('stroke', function(d,i) { return d.color || color(d, i) });
+
+
+
+    }
 
     // Let's simulate stream 
     $scope.data= []; // array to store all values
@@ -55,6 +96,15 @@ app.controller('StreamCtrl', function($scope, $http) {
 
     } )
 
+    // update global scope keyword list
+    updateKeywordList($scope.data, function (list) {
+
+        $scope.$parent.keywords = list;
+
+    })
+    
+    console.log($scope)
+
     // to start/stop streaming
     $scope.streaming = false; 
     
@@ -64,6 +114,12 @@ app.controller('StreamCtrl', function($scope, $http) {
         parseStream( $scope.streamSize, $scope.streamLength, function( initData ) {
 
             $scope.data=initData;
+            
+            // update global scope keyword list
+            updateKeywordList($scope.data, function (list) {
+                $scope.$parent.keywords = list;
+            })
+
 
     } )
 
@@ -85,6 +141,7 @@ app.controller('StreamCtrl', function($scope, $http) {
 
         $scope.streamSize = size;
         console.log("$scope.streamSize : "+$scope.streamSize);
+
     }
         
     
@@ -159,4 +216,18 @@ function addPoint (newPoint, streamData, callback) {
         streamData[i].values.push([newPoint[i].count,newPoint[i].sliceid])
 
     };
+}
+
+function updateKeywordList(data, callback) {
+    
+    var list = [];
+
+    for (var i = 0; i < data.length; i++) {
+
+        list.push(data[i].key);
+
+    };
+
+    callback(list);
+
 }
