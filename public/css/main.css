@@ -9,7 +9,27 @@
 #final-list {
     height:30%;
     width:100%;
+    border:3px dashed #BBBBBB ;
 }
+
+#final-list .info {
+    text-align:center;
+    color: #BBBBBB;
+    font-size:12pt;
+    font-weight: bolder
+}
+
+.rounded-corners {
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -khtml-border-radius: 15px;
+    border-radius: 15px;
+}
+
+#streamUtils input[type="number"] {
+    width:50px;
+}
+
 /*#content {
     background-color: #f5f5f5
 }*/

@@ -121,13 +121,14 @@
       </div>
       <div class="span6 well row">
         <!-- <h3>Your list</h3> -->
-          <div id="final-list" data-drop="true" ng-model='list' jqyoui-droppable="{ multiple:true  }">          
+          <div class="rounded-corners" id="final-list" data-drop="true" ng-model='list' jqyoui-droppable="{ multiple:true  }">          
             <!-- <div ui:sortable class="unstyled row"> -->
             <ul class="unstyled">
                 <li class="btn btn-info btn-dragabble" ng-repeat="item in list" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list" jqyoui-draggable="{index: {{$index}},animate:true}">
-                    {{item}}
+                    {{item.key}}
                 </li>
             </ul>
+            <p class="info">Drop keywords here</p>
           </div>
           <div class="utils pull-right">
               <a href="#" class="download"><i class=" icon-large icon-download-alt"></i></a>
@@ -142,29 +143,24 @@
     <div id="flow" ng-controller="StreamCtrl">
 
         <div id="streamUtils" class="row-fluid">
-          <div class="span1"></div>
-          <ul class="unstyled inline">
-            <li class="span1">
+          <div class="offset1"></div>
+            <div class="span1">
               <div class="btn" ng-click="startStopStream()">
                 <i ng-class="{true:'icon-pause', false:'icon-play'}[streaming]"></i>
               </div>
-            
-            </li>
-            <li class="span2">
-              <p>Qty of keywords  (1 to 20): 
-                <input type="number" name="stream-items-len" min="1" max="20" value="{{streamSize}}" ng-model="streamSize" ng-change="setStreamSize(streamSize)">
-              </p>
-            </li>
-            <li class="span2">
-              <p>Granularity: {{streamLength}} %
-                <input id="slider2" type ="range" min ="10" max="100" step ="10" value ="{streamLength}" ng-model="streamLength" ng-change="setStreamLength(streamLength)"/>
-              </p>
-            </li>
-            <li class="span2">
-              <p>Timeframe: 
-                <input id="slider2" type ="range" min ="10" max="100" step ="10"/>
-              </p>
-            </li>
+            </div>
+            <div class="span2">
+              <label for="stream-items-len">Qty of keywords  (1 to 20):</label>
+              <input id="stream-items-len" type="number" name="stream-items-len" min="1" max="20" value="{{streamSize}}" ng-model="streamSize" ng-change="setStreamSize(streamSize)">
+            </div>
+            <div class="span2">
+              <label for="granularity">Granularity: {{streamLength}} %</label>
+              <input id="granularity" type ="range" min ="10" max="100" step ="10" value ="{streamLength}" ng-model="streamLength" ng-change="setStreamLength(streamLength)"/>
+            </div>
+            <div class="timeframe">
+              <label for="">Timeframe: </label>
+              <input id="timeframe" type ="range" min ="10" max="100" step ="10"/>
+            </div>
           </ul>
         </div>
         

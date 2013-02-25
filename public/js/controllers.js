@@ -8,7 +8,7 @@ app.controller('MainCtrl', function($scope, $http) {
     $scope.keywords = []; // array to store keywords text
     $scope.colors = []; // global array to store keywords color
 
-    $scope.list = [ 'drag me'];    
+    $scope.list = [ {'key':'drag me'}];    
     
     // console.log($scope.keywords.length);
     // Drag 'n drop callbacks
