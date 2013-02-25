@@ -10,7 +10,10 @@ app.controller('MainCtrl', function($scope, $http) {
 
     $scope.list = [ {'key':'drag me'}];
 
+    // some global methods
     $scope.saveToCsv = saveToCsv;
+    $scope.copyToClipboard = copyToClipboard;
+
     
     // console.log($scope.keywords.length);
     // Drag 'n drop callbacks
@@ -294,6 +297,12 @@ function saveToCsv (rawData) {
         var popup = window.open('', 'csv', '');
         popup.document.body.innerHTML = '<pre>' + str + '</pre>';
     }
+
+}
+
+function copyToClipboard (data) {
+    var text = listToArray(data).join(',')
+    window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
 
 }
 
