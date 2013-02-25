@@ -50,22 +50,21 @@ app.controller('StreamCtrl', function($scope, $http) {
     $scope.colors = d3.scale.category20();
     
     // console.log($scope)
-    // updateBtns();
 
-    $scope.updateBtns = function updateBtns() {
-    
-        var colors = d3.scale.category20();
-        var myColors = [];
 
-        d3.selectAll(".keyword-item")
-            // .append('circle')
-            .style("background-color", function(d, i) { return colors(i) })
-            .style("background-image", "none");
+    // button for switch action
+    $scope.switchStream = function switchStream (type) {
+        console.log(type)
+        var style  = { style : type}
 
-        console.log("changed")
-        // return(colors
-    };
+        // var chart = $scope.$$childHead.chart;
+        $scope.$$childHead.chart.style(type)
+        console.log($scope.$$childHead.chart.state())
 
+
+        var svg = d3.select("#stream-viz")
+        $scope.$$childHead.chart(svg)
+    }
 
     // handle btn click actions
     $scope.btnClick = function btnClick(item) {

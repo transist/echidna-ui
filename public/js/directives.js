@@ -91,6 +91,7 @@ function initGraph(scope, callback) {
                       .y( function(d) { return d[0] } )
                       .color(keyColor)
                       .showLegend(false)
+                      .showControls(false)
                       // .attr("id", function(d) { return d[1] })
                       // .clipEdge(true);
         // // console.log(scope.chart);
@@ -110,7 +111,7 @@ function initGraph(scope, callback) {
 
         // MOUSE ACTIONS
 
-        // chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); });
+        chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); });
 
         // chart.legend.dispatch.on('legendMouseover', function(e) { nv.log('New stateChange:', JSON.stringify(e)); }
         
@@ -143,6 +144,7 @@ function updateGraph (val, scope) {
     // scope.chart.dispatch.on('changeState', function(e) { nv.log('New changeState:', JSON.stringify(e)); });
 }
 
+// USELESS
 // Mouse events
 app.directive('btnClick', function( $document, mouse){
     

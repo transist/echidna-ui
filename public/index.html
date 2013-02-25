@@ -125,7 +125,7 @@
       </div>
       <div class="span6 well row">
         <!-- <h3>Your list</h3> -->
-          <div class="rounded-corners" id="final-list" data-drop="true" ng-model='list' jqyoui-droppable="{ multiple:true  }">          
+          <div class="rounded-corners" id="final-list" data-drop="true" ng-model='list' jqyoui-droppable="{ multiple:true  }">
             <!-- <div ui:sortable class="unstyled row"> -->
             <ul class="unstyled">
                 <li class="btn btn-info btn-dragabble" ng-repeat="item in list" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list" jqyoui-draggable="{index: {{$index}},animate:true}">
@@ -185,6 +185,11 @@
                 <i ng-class="{true:'icon-pause', false:'icon-play'}[streaming]"></i>
               </div>
             </div>
+            <div class="span2 btn-group btn-small">
+              <a href="#" ng-click="switchStream('stack')" class="btn">Stacked</a>
+              <a href="#" ng-click="switchStream('stream')" class="btn">Stream</a>
+              <a href="#" ng-click="switchStream('expand')" class="btn">Expanded</a>
+            </div>
             <div class="span2">
               <label for="stream-items-len">Qty of keywords  (1 to 20):</label>
               <input id="stream-items-len" type="number" name="stream-items-len" min="1" max="20" value="{{streamSize}}" ng-model="streamSize" ng-change="setStreamSize(streamSize)">
@@ -199,9 +204,6 @@
             </div>
           </ul>
         </div>
-        
-
-
         
     </div>
 

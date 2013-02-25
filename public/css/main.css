@@ -59,3 +59,11 @@
     content: ' \25CF';
     font-size: 25px;
 }
+
+.triangle:before {
+    border-color: transparent transparent #f5f5f5 transparent;
+    border-style: solid;
+    border-width: 0px 50px 50px 50px;
+    height: 0px;
+    width: 0px;
+}
