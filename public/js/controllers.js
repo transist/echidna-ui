@@ -47,15 +47,27 @@ app.controller('StreamCtrl', function($scope, $http) {
     
     $scope.streamSize = 5; // number of keywords (y values)
     $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
+    $scope.colors = d3.scale.category20();
     
     // console.log($scope)
     // updateBtns();
 
-    $scope.btnChange = updateBtns;
+    $scope.updateBtns = function updateBtns() {
+    
+        var colors = d3.scale.category20();
+        var myColors = [];
+
+        d3.selectAll(".keyword-item")
+            // .append('circle')
+            .style("background-color", function(d, i) { return colors(i) })
+            .style("background-image", "none");
+
+        console.log("changed")
+        // return(colors
+    };
 
 
-
-    // handle click actions
+    // handle btn click actions
     $scope.btnClick = function btnClick(item) {
         
         var chart = $scope.$$childHead.chart;
@@ -83,13 +95,67 @@ app.controller('StreamCtrl', function($scope, $http) {
             // redraw graph
             // chart(svg);
             svg.transition().duration(500).call(chart);
-            
+            console.log(item)
             // btn class
-            item.enabled =  (enabled) ? "enabled" : "disabled";
+            var state =  (item.state == "enabled") ? "enabled" : "disabled";
+            // item.state = state;
 
-            return item;
+
+            return item.state;
 
         })
+
+    }
+
+    $scope.stackFadeIn = function stacksFadeIn(index) {
+
+        // console.log("other stacks fade to "+ index);
+
+        // var chart = $scope.$$childHead.chart;
+        // $scope.updateBtns();
+
+
+        var svg = d3.select("#stream-viz");
+        var path = svg.select('.nv-areaWrap').selectAll('path.nv-area')
+        // console.log(path, index)
+
+        for (var i = 0; i < path[0].length; i++) {
+
+            if( i == index) {
+                d3.select(path[0][i]).classed('hover', true);
+
+            } else { 
+                // console.log("hhha"); 
+                d3.select(path[0][i]).classed('lower', true);
+            }
+
+        };
+        
+        
+        // select('.nv-chart-' + id + ' .nv-area-' + e.seriesIndex).classed('hover', true);
+
+    }
+
+    $scope.stackFadeOut = function stackFadeOut(index) {
+
+        var svg = d3.select("#stream-viz");
+        var path = svg.select('.nv-areaWrap').selectAll('path.nv-area')
+        // console.log(path, index)
+
+        for (var i = 0; i < path[0].length; i++) {
+
+            if( i == index) {
+                d3.select(path[0][i]).classed('hover', false);
+
+            } else { 
+                // console.log("hhha"); 
+                d3.select(path[0][i]).classed('lower', false);
+            }
+
+        };
+        
+        
+        // select('.nv-chart-' + id + ' .nv-area-' + e.seriesIndex).classed('hover', true);
 
     }
 
@@ -176,17 +242,20 @@ app.controller('StreamCtrl', function($scope, $http) {
 });
 
 
+
+/*
 function updateBtns() {
     
-    // var colors = d3.scale.category20();
+    var colors = d3.scale.category20();
 
-    // d3.selectAll(".keyword-item")
-    //     .style("background-color", function(d, i) { return colors(i) })
-    //     .style("background-image", "none");
+    d3.selectAll(".keyword-item")
+        .style("background-color", function(d, i) {  console.log(colors(i));
+        // return colors(i) })
+        .style("background-image", "none");
 
-    // console.log("changed")
+    console.log("changed")
 }
-
+*/
 
 function parseStream( numberItems, streamLength, callback ) {
 
@@ -245,7 +314,7 @@ function updateKeywordList(data, callback) {
     for (var i = 0; i < data.length; i++) {
         
         var kw = {};
-        
+        kw.state = "enabled"
         kw.key = data[i].key;
 
         // console.log(i)

@@ -1,4 +1,11 @@
 // directives.js
+
+/*
+
+    on btn hover > 0.5
+
+*/
+
 app.directive('streamViz', function () {
 
     return {
@@ -17,6 +24,8 @@ app.directive('streamViz', function () {
                 scope.$apply(function () {
                     scope.chart = chart;
                     // scope.colors = chart.colors
+                    // scope.$parent.updateBtns();
+                    console.log(scope);
                 });
 
                 // console.log(chart.stacked)
@@ -57,7 +66,7 @@ function createSVG(scope, element){
 function initGraph(scope, callback) {
 
     // constants
-    var colors = d3.scale.category20();
+    var colors = d3.scale.category20c();
 
     // scope
 

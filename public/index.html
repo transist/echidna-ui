@@ -9,10 +9,10 @@
   <!-- <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/base/jquery-ui.css"> -->
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/font-awesome.css">
-  <link rel="stylesheet" href="css/main.css">
   <link href="css/bootstrap-responsive.css" rel="stylesheet">
 
   <link href="lib/d3/nvd3/nv.d3.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="css/main.css">
 
   <script src="lib/jquery/jquery.min.js"></script>
   <script src="lib/jquery/jquery-ui.min.js"></script>
@@ -51,30 +51,31 @@
 <body ng-controller="MainCtrl">
   
   <div class="navbar navbar-inverse">
-    <div class="navbar-inner">
-      <div class="container">
-        
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
+        <div class="navbar-inner">
+          <div class="container">
+            
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
 
-        <a href="#" class="brand">Words & Trends Generator</a>
+            <a href="#" class="brand">Words & Trends Generator</a>
 
-        <div class="nav-collapse collapse pull-right">
-          <ul class="nav">
-            <li class="active"><a href="">Home</a></li>
-            <li><a href="">Clients</a></li>
-            <li><a href="">Filter presets</a></li>
-            <li><a href="">Account</a></li>
-            <li><a href="">Logout</a></li>
-          </ul>
+            <div class="nav-collapse collapse pull-right">
+              <ul class="nav">
+                <li class="active"><a href="">Home</a></li>
+                <li><a href="">Clients</a></li>
+                <li><a href="">Filter presets</a></li>
+                <li><a href="">Account</a></li>
+                <li><a href="">Logout</a></li>
+              </ul>
+            </div>
         </div>
     </div>
   </div>
 
-  <div class="fluid-container">
+  <div id="main" class="fluid-container">
 
     <div id="toolbar" class="row-fluid">
         <div class="offset1"></div>
@@ -85,13 +86,14 @@
         <div class="span8 btn-toolbar">
 
           <!-- <div class="span8 "> -->
-            <div class="span4">              
+            <div class="span2">              
               <a href="" class="btn">Action 1</a>
               <a href="" class="btn">Action 2</a>
             </div>
 
-            <div class="span8">
+            <div class="span10">
               <div class="btn-group btn-small">
+                <button class="btn">Both</button>
                 <button class="btn">Men</button>
                 <button class="btn">Women</button>
               </div>
@@ -110,12 +112,14 @@
                 <button class="btn">Tier 2</button>
                 <button class="btn">Tier 3</button>
               </div>
+              <div class="btn-group btn-small">
+                <button class="btn"><i class="icon-save"></i></button>
+              </div>
             </div>
       </div>
     </div>
 
     <div id="content" class="row-fluid">
-      
       <div class="span6">
         <p>Placeholder</p>
       </div>
@@ -141,6 +145,38 @@
     
 
     <div id="flow" ng-controller="StreamCtrl">
+  
+        <div id="keywords" class="row-fluid">
+          <div class="offset1"></div>
+          <!-- <div class="span1">
+            <a href="" class="prev-keywords"><i class="icon-large icon-step-backward"></i></a>
+          </div> -->
+          <div id="keywords-list" class="span9">
+          
+
+            <div class="btn keyword-item keyword-{{$index}} {{item.key}} {{item.state}} btn-draggable" ng-repeat="item in keywords" data-drag="true" data-jqyoui-options="{revert: 'invalid'}"  ng-click="btnClick(item)" ng-mouseenter="stackFadeIn($index)" ng-mouseleave="stackFadeOut($index)" ng-model="keywords" jqyoui-draggable="{index: {{$index}}, animate:true}"  >
+
+              <p>
+                <span style="color: {{ colors($index) }}" class="circle">
+                  
+                </span> 
+                {{item.key}}
+              </p>
+              
+
+              <!-- {{chart}} 
+          style="background-color : {{item.color}}; background-image:none;"
+            -->
+
+            </div>
+          </div>
+
+         <!--  <div class="span1">
+            <a href="" class="next-keywords"><i class="icon-large icon-step-forward"></i></a>
+          </div> -->
+        </div>
+
+        <stream-viz val="data"></stream-viz>
 
         <div id="streamUtils" class="row-fluid">
           <div class="offset1"></div>
@@ -164,39 +200,12 @@
           </ul>
         </div>
         
-        <div id="keywords" class="row-fluid">
-          <div class="offset1"></div>
-          <!-- <div class="span1">
-            <a href="" class="prev-keywords"><i class="icon-large icon-step-backward"></i></a>
-          </div> -->
-          <div id="keywords-list" class="span9">
-          
 
-            <div class="btn keyword-item {{item.key}} btn-draggable" ng-repeat="item in keywords" data-drag="true" data-jqyoui-options="{revert: 'invalid'}"  ng-click="btnChange(); btnClick(item)" ng-model="keywords" jqyoui-draggable="{index: {{$index}}, animate:true}" >
-              
-              {{item.key}}
-              <!-- {{chart}} 
-          style="background-color : {{item.color}}; background-image:none;"
-            -->
 
-            </div>
-          </div>
-
-         <!--  <div class="span1">
-            <a href="" class="next-keywords"><i class="icon-large icon-step-forward"></i></a>
-          </div> -->
-        </div>
-
-        <stream-viz val="data"></stream-viz>
+        
     </div>
 
   </div>
-
-  <pre>
-      <ul>
-        <li ng:repeat="item in list">{{item.key}}</li>
-      </ul>
-  </pre>
 
   
 </body>

@@ -2,12 +2,23 @@
     background-color: #f5f5f5
 }
 
-#streamUtils {
+#content {
+    height: 100%
+}
+
+#flow {
+    position: absolute;
+    bottom:0;
+    left:0;
+    width:100%;
     background-color: #f5f5f5
 }
 
+#streamUtils {
+    background-color: #efefef
+}
+
 #final-list {
-    height:30%;
     width:100%;
     border:3px dashed #BBBBBB ;
 }
@@ -30,6 +41,21 @@
     width:50px;
 }
 
-/*#content {
-    background-color: #f5f5f5
-}*/
+.nvd3.nv-stackedarea path.nv-area {
+    fill-opacity:0.7;
+}
+.nvd3.nv-stackedarea path.nv-area.lower {
+    fill-opacity:.4;
+}
+.nvd3.nv-stackedarea path.nv-area.hover {
+  fill-opacity: 1;
+  stroke:#000;
+  stroke-width:5px;
+  stroke-opacity: .85;
+  
+}
+
+.circle:before {
+    content: ' \25CF';
+    font-size: 25px;
+}
