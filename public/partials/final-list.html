@@ -1,0 +1,16 @@
+<!-- <h3>Your list</h3> -->
+      <div class="rounded-corners" id="final-list" data-drop="true" ng-model='list' jqyoui-droppable="{ multiple:true  }">
+        <!-- <div ui:sortable class="unstyled row"> -->
+        <ul class="unstyled">
+            <li class="btn btn-info btn-dragabble" ng-repeat="item in list" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list" jqyoui-draggable="{index: {{$index}},animate:true}">
+                {{item.key}}
+            </li>
+        </ul>
+        <p class="info">Drop keywords here</p>
+      </div>
+      <div class="utils pull-right">
+          <a href="#" class="download"><i class=" icon-large icon-download-alt"></i></a>
+          <a href="" class="share"><i class=" icon-large icon-envelope"></i></a>
+          <a href="#" class="save" ng-click="saveToCsv(list, list)" ><i class=" icon-large icon-save"></i></a>
+          <a href="#" class="copy" ng-click="copyToClipboard(list)"><i class=" icon-large icon-copy"></i></a>
+      </div>

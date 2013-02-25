@@ -56,7 +56,7 @@ app.controller('StreamCtrl', function($scope, $http) {
     $scope.streamSize = 5; // default number of keywords (y values)
     $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
     
-    $scope.colors = d3.scale.category20b(); // define d3 color scheme    
+    $scope.colors = d3.scale.category20c(); // define d3 color scheme    
     $scope.streaming = false;  // to start/stop streaming
 
     // console.log($scope)
