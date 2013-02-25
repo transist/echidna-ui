@@ -66,7 +66,7 @@ function createSVG(scope, element){
 function initGraph(scope, callback) {
 
     // constants
-    var colors = d3.scale.category20c();
+    var colors = scope.$parent.colors;
 
     // scope
 

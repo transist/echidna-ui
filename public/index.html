@@ -78,28 +78,31 @@
   <div id="main" class="fluid-container">
 
     <div id="toolbar" class="row-fluid">
-        <div class="offset1"></div>
+
         <div class="span3">
           <h1>{{name}}</h1>
         </div>
-        
-        <div class="span8 btn-toolbar">
 
-          <!-- <div class="span8 "> -->
-            <div class="span2">              
+        <div class="span2">      
+          <div>
               <a href="" class="btn">Action 1</a>
               <a href="" class="btn">Action 2</a>
-            </div>
+          </div>
+        </div>
 
-            <div class="span10">
+        <div class="btn-toolbar pull-right">
+
+          <!-- <div class="span8 "> -->
+
+
               <div class="btn-group btn-small">
-                <button class="btn">Both</button>
+                <button class="btn active">Both</button>
                 <button class="btn">Men</button>
                 <button class="btn">Women</button>
               </div>
 
               <div class="btn-group btn-small">
-                <button class="btn">All</button>
+                <button class="btn active">All</button>
                 <button class="btn">18-</button>
                 <button class="btn">24-</button>
                 <button class="btn">35-</button>
@@ -107,7 +110,7 @@
               </div>
 
               <div class="btn-group btn-small">
-                <button class="btn">All</button>
+                <button class="btn active">All</button>
                 <button class="btn">Tier 1</button>
                 <button class="btn">Tier 2</button>
                 <button class="btn">Tier 3</button>
@@ -115,8 +118,8 @@
               <div class="btn-group btn-small">
                 <button class="btn"><i class="icon-save"></i></button>
               </div>
-            </div>
-      </div>
+
+        </div>
     </div>
 
     <div id="content" class="row-fluid">
@@ -186,22 +189,22 @@
               </div>
             </div>
             <div class="span2 btn-group btn-small">
-              <a href="#" ng-click="switchStream('stack')" class="btn">Stacked</a>
+              <a href="#" ng-click="switchStream('stack')" class="active btn">Stacked</a>
               <a href="#" ng-click="switchStream('stream')" class="btn">Stream</a>
               <a href="#" ng-click="switchStream('expand')" class="btn">Expanded</a>
             </div>
-            <div class="span2">
-              <label for="stream-items-len">Qty of keywords  (1 to 20):</label>
-              <input id="stream-items-len" type="number" name="stream-items-len" min="1" max="20" value="{{streamSize}}" ng-model="streamSize" ng-change="setStreamSize(streamSize)">
-            </div>
-            <div class="span2">
-              <label for="granularity">Granularity: {{streamLength}} %</label>
-              <input id="granularity" type ="range" min ="10" max="100" step ="10" value ="{streamLength}" ng-model="streamLength" ng-change="setStreamLength(streamLength)"/>
-            </div>
-            <div class="timeframe">
-              <label for="">Timeframe: </label>
-              <input id="timeframe" type ="range" min ="10" max="100" step ="10"/>
-            </div>
+            <form class="form-inline pull-right">
+                <label for="stream-items-len">Qty of keywords  (1 to 20):
+                  <input id="stream-items-len" type="number" name="stream-items-len" min="1" max="20" value="{{streamSize}}" ng-model="streamSize" ng-change="setStreamSize(streamSize)">
+                </label>
+                <label for="granularity">Granularity: {{streamLength}} %
+                  <input id="granularity" type ="range" min ="10" max="100" step ="10" value ="{streamLength}" ng-model="streamLength" ng-change="setStreamLength(streamLength)"/>
+                </label>
+                <label for="">Timeframe:
+                  <input id="timeframe" type ="range" min ="10" max="100" step ="10"/>
+                </label>
+              
+            </form>
           </ul>
         </div>
         
