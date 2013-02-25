@@ -8,7 +8,9 @@ app.controller('MainCtrl', function($scope, $http) {
     $scope.keywords = []; // array to store keywords text
     $scope.colors = []; // global array to store keywords color
 
-    $scope.list = [ {'key':'drag me'}];    
+    $scope.list = [ {'key':'drag me'}];
+
+    $scope.saveToCsv = saveToCsv;
     
     // console.log($scope.keywords.length);
     // Drag 'n drop callbacks
@@ -173,13 +175,13 @@ app.controller('StreamCtrl', function($scope, $http) {
 
 function updateBtns() {
     
-    var colors = d3.scale.category20();
+    // var colors = d3.scale.category20();
 
     // d3.selectAll(".keyword-item")
     //     .style("background-color", function(d, i) { return colors(i) })
     //     .style("background-image", "none");
 
-    console.log("changed")
+    // console.log("changed")
 }
 
 
@@ -256,4 +258,49 @@ function updateKeywordList(data, callback) {
 
     callback(list);
 
+}
+
+function saveToCsv (rawData) {
+
+    var data = listToArray(rawData);
+    var keys = listToArray(rawData);
+
+    var convertToCSV = function(data) { 
+
+        return keys.join(',');       
+
+        /*
+        var orderedData = [];
+        for (var i = 0, iLen = data.length; i < iLen; i++) {
+            temp = data[i];
+            for (var j = 0, jLen = temp.length; j < jLen; j++) {
+
+                if (!orderedData[j]) {
+                    orderedData.push([temp[j]]);
+                } else {
+                    orderedData[j].push(temp[j]);
+                }
+            }
+        }
+        return keys.join(',') + '\r\n' + orderedData.join('\r\n');
+        */
+    }
+
+    var str = convertToCSV(data, keys);
+    if (navigator.appName != 'Microsoft Internet Explorer') {
+        window.open('data:text/csv;charset=utf-8,' + escape(str));
+    }
+    else {
+        var popup = window.open('', 'csv', '');
+        popup.document.body.innerHTML = '<pre>' + str + '</pre>';
+    }
+
+}
+
+function listToArray(list) {
+    var tmp = []
+    for (var i = 0; i < list.length; i++) {
+        tmp.push(list[i].key);
+    };
+    return tmp;
 }
