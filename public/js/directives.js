@@ -44,7 +44,8 @@ app.directive('streamViz', function () {
 
 function createSVG(scope, element){
     scope.w = 400;
-    scope.h = 200;
+    scope.h = 100;
+    
     // console.log('ha');
     if (!(scope.svg != null)) {
         scope.svg = d3.select(element[0]).append("svg").attr("width", scope.w).attr("height", scope.h).attr("id", "stream-viz");

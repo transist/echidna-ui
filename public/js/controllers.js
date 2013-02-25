@@ -2,7 +2,9 @@
 
 app.controller('MainCtrl', function($scope, $http) {
     
-    $scope.name = 'World';
+    // CONSTANT
+    $scope.name = 'Your brand';
+
     $scope.keywords = []; // array to store keywords text
     $scope.colors = []; // global array to store keywords color
 
