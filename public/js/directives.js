@@ -9,16 +9,23 @@ app.directive('streamViz', function () {
         },
         link: function (scope, element, attrs) {
             // console.log(scope.$parent.data);
+
             createSVG(scope, element);
-            
+
             initGraph(scope, function(chart) {
-                scope.chart = chart;
+                
+                scope.$apply(function () {
+                    scope.chart = chart;
+                    // scope.colors = chart.colors
+                });
+
                 // console.log(chart.stacked)
                 // scope.$watch('val', updateGraph, true);
                 // console.log( scope.chart.legend.width(10) );
                 // scope.chart.legend.width(10) ;
             });
             
+            // console.log(scope);
 
             setInterval(function () {
                 // console.log(scope.$parent.data)
@@ -50,12 +57,21 @@ function initGraph(scope, callback) {
 
     // constants
     var colors = d3.scale.category20();
+
+    // scope
+
+    // body...
+    var colorsTmp = [];
+
     keyColor = function(d, i) {
         // scope.$parent.colors.push(colors(i));
         // console.log(colors(i));
+        colorsTmp.push(colors(i))
         return colors(i);
     };
 
+    scope.colors = colorsTmp;
+    // console.log(colors())
     // console.log (scope.$parent.colors);
 
     nv.addGraph(function() {
@@ -67,18 +83,16 @@ function initGraph(scope, callback) {
                       .showLegend(false)
                       // .attr("id", function(d) { return d[1] })
                       // .clipEdge(true);
-        // console.log(scope.chart);
-        chart.xAxis
-            .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+        // // console.log(scope.chart);
+        // chart.xAxis
+        //     .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
 
-        chart.yAxis
-            .tickFormat(d3.format(',.2f'));
+        // chart.yAxis
+        //     .tickFormat(d3.format(',.2f'));
 
-         scope.svg
+        scope.svg
               .datum( scope.val )
                 .transition().duration(500).call(chart);
-
-
 
         nv.utils.windowResize(chart.update);
 
@@ -112,6 +126,8 @@ function updateGraph (val, scope) {
     scope.svg
       .datum( val )
         .transition().duration(500).call(scope.chart);
+
+    nv.utils.windowResize(scope.chart.update);
 
     // scope.chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); });
     // scope.chart.dispatch.on('changeState', function(e) { nv.log('New changeState:', JSON.stringify(e)); });

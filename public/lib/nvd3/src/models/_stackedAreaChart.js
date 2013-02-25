@@ -29,7 +29,6 @@ nv.models.stackedAreaChart = function() {
     , state = { style: stacked.style() }
     , noData = 'No Data Available.'
     , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState')
-    , controlWidth = 250
     ;
 
   xAxis
@@ -133,7 +132,7 @@ nv.models.stackedAreaChart = function() {
 
       if (showLegend) {
         legend
-          .width( availableWidth - controlWidth );
+          .width( availableWidth * 2 / 3 );
 
         g.select('.nv-legendWrap')
             .datum(data)
@@ -146,7 +145,7 @@ nv.models.stackedAreaChart = function() {
         }
 
         g.select('.nv-legendWrap')
-            .attr('transform', 'translate(' + controlWidth + ',' + (-margin.top) +')');
+            .attr('transform', 'translate(' + ( availableWidth * 1 / 3 ) + ',' + (-margin.top) +')');
       }
 
       //------------------------------------------------------------
@@ -163,7 +162,7 @@ nv.models.stackedAreaChart = function() {
         ];
 
         controls
-          .width( controlWidth )
+          .width( Math.min(280, availableWidth * 1 / 3) )
           .color(['#444', '#444', '#444']);
 
         g.select('.nv-controlsWrap')
@@ -253,7 +252,11 @@ nv.models.stackedAreaChart = function() {
       });
 
       legend.dispatch.on('legendClick', function(d,i) {
+        
+        // console.log(data)
+
         d.disabled = !d.disabled;
+
 
         if (!data.filter(function(d) { return !d.disabled }).length) {
           data.map(function(d) {

@@ -17,7 +17,6 @@ nv.models.legend = function() {
 
 
   function chart(selection) {
-    // console.log(selection)
     selection.each(function(data) {
       var availableWidth = width - margin.left - margin.right,
           container = d3.select(this);
@@ -27,14 +26,7 @@ nv.models.legend = function() {
       // Setup containers and skeleton of chart
 
       var wrap = container.selectAll('g.nv-legend').data([data]);
-      var gEnter = wrap.enter()
-            .append('g')
-            .attr('class', 'nvd3 nv-legend')
-            // .attr('data-drop', "true")
-            // .attr('ng-model','list' )
-            // .attr('jqyoui-droppable', '"{ multiple:true  }"')
-
-            .append('g');
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-legend').append('g');
       var g = wrap.select('g');
 
       wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
@@ -44,14 +36,7 @@ nv.models.legend = function() {
 
       var series = g.selectAll('.nv-series')
           .data(function(d) { return d });
-      var seriesEnter = series.enter()
-          .append('g')
-          // .attr('class', 'nv-series btn-dragabble')
-          // .attr('data-drag',"true" )
-          // .attr('data-jqyoui-options',"{revert: 'invalid'}")
-          // // .attr('ng-model',"list" )
-          // .attr('jqyoui-draggable',"{index: {{$index}},animate:true}")
-
+      var seriesEnter = series.enter().append('g').attr('class', 'nv-series')
           .on('mouseover', function(d,i) {
             dispatch.legendMouseover(d,i);  //TODO: Make consistent with other event objects
           })
@@ -64,7 +49,6 @@ nv.models.legend = function() {
           .on('dblclick', function(d,i) {
             dispatch.legendDblclick(d,i);
           });
-
       seriesEnter.append('circle')
           .style('stroke-width', 2)
           .attr('r', 5);

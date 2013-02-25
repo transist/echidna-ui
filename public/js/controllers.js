@@ -6,10 +6,6 @@ app.controller('MainCtrl', function($scope, $http) {
     $scope.keywords = []; // array to store keywords text
     $scope.colors = []; // global array to store keywords color
 
-    // $http.get('data/keywords.json').success(function(data) {
-    //     // console.log (data);
-    // });
-
     $scope.list = [ 'drag me'];    
     
     // console.log($scope.keywords.length);
@@ -44,13 +40,22 @@ app.controller('StreamCtrl', function($scope, $http) {
     
     $scope.streamSize = 5; // number of keywords (y values)
     $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
+    
+    // console.log($scope)
+    // updateBtns();
 
+    $scope.btnChange = updateBtns;
+
+
+
+    // handle click actions
     $scope.btnClick = function btnClick(item) {
-        // console.log("nv d3");
         
-        // console.log(item);
+        var chart = $scope.$$childHead.chart;
 
-        // class(item)
+        // console.log(item)
+        // var chart = $scope.$$childHead.chart;
+        var enabled = true;
 
         var svg = d3.select("#stream-viz")
             .attr("class", "blabla")
@@ -59,36 +64,32 @@ app.controller('StreamCtrl', function($scope, $http) {
 
             var container = d3.select(this);
 
-            // console.log(container);
-            // console.log(d)
-            // d.disabled = !d.disabled;
-
+            // toggle graph area
             data.map(function(d) {
-                if(d.key == item) d.disabled =true; //console.log(d);
-                console.log(d.disabled)
-                // d.disabled = false;
+                // console.log(d)
+                // colors()
+                if(d.key == item.key) d.disabled = (d.disabled ==true) ? d.disabled =false : d.disabled = true; //
+                enabled = d.disabled;
                 return d;
             });
 
-            // chart(selection);
-            
-            // console.log()
-            // svg.transition().call(chart)
+            // redraw graph
             // chart(svg);
+            svg.transition().duration(500).call(chart);
+            
+            // btn class
+            item.enabled =  (enabled) ? "enabled" : "disabled";
+
+            return item;
 
         })
-
-
-          // .style('fill', function(d,i) { return d.color || color(d,i)})
-          // .style('stroke', function(d,i) { return d.color || color(d, i) });
-
-
 
     }
 
     // Let's simulate stream 
     $scope.data= []; // array to store all values
 
+    // console.log($scope)
     // init with first values
     parseStream( $scope.streamSize, $scope.streamLength, function( initData ) {
 
@@ -107,6 +108,7 @@ app.controller('StreamCtrl', function($scope, $http) {
 
     // to start/stop streaming
     $scope.streaming = false; 
+
     
     // Let's stream some randomness
     setInterval(function(){ // tick every second with fake data
@@ -119,7 +121,6 @@ app.controller('StreamCtrl', function($scope, $http) {
             updateKeywordList($scope.data, function (list) {
                 $scope.$parent.keywords = list;
             })
-
 
     } )
 
@@ -166,6 +167,18 @@ app.controller('StreamCtrl', function($scope, $http) {
     ]
 
 });
+
+
+function updateBtns() {
+    
+    var colors = d3.scale.category20();
+
+    // d3.selectAll(".keyword-item")
+    //     .style("background-color", function(d, i) { return colors(i) })
+    //     .style("background-image", "none");
+
+    console.log("changed")
+}
 
 
 function parseStream( numberItems, streamLength, callback ) {
@@ -223,8 +236,19 @@ function updateKeywordList(data, callback) {
     var list = [];
 
     for (var i = 0; i < data.length; i++) {
+        
+        var kw = {};
+        
+        kw.key = data[i].key;
 
-        list.push(data[i].key);
+        // console.log(i)
+        // console.log(colors(i));
+        // console.log(nv.utils.defaultColor());
+        // console.log($scope);
+        // kw.color = colors(i) ;
+        
+        list.push(kw);
+        // list.push(data[i].key);
 
     };
 
