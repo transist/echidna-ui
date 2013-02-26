@@ -1,62 +1,29 @@
-<div id="flow" ng-controller="StreamCtrl">
-  
-        <div id="keywords" class="row-fluid">
-          <div class="offset1"></div>
-          <!-- <div class="span1">
-            <a href="" class="prev-keywords"><i class="icon-large icon-step-backward"></i></a>
-          </div> -->
-          <div id="keywords-list" class="span9">
-          
+<div id="streamUtils" class="row-fluid">
+  <div class="offset1">
+    <!-- free space -->
+  </div>
 
-            <div class="btn keyword-item keyword-{{$index}} {{item.key}} {{item.state}} btn-draggable" ng-repeat="item in keywords" data-drag="true" data-jqyoui-options="{revert: 'invalid'}"  ng-click="btnClick(item)" ng-mouseenter="stackFadeIn($index)" ng-mouseleave="stackFadeOut($index)" ng-model="keywords" jqyoui-draggable="{index: {{$index}}, animate:true}">
-
-              <p>
-                <span style="color: {{ colors($index) }}" class="circle">
-                  
-                </span> 
-                {{item.key}}
-              </p>
-              
-
-              <!-- {{chart}} 
-          style="background-color : {{item.color}}; background-image:none;"
-            -->
-
-            </div>
-          </div>
-
-         <!--  <div class="span1">
-            <a href="" class="next-keywords"><i class="icon-large icon-step-forward"></i></a>
-          </div> -->
-        </div>
-
-        <stream-viz val="data"></stream-viz>
-
-        <div id="streamUtils" class="row-fluid">
-          <div class="offset1"></div>
-            <div class="span1">
-              <div class="btn" ng-click="startStopStream()">
-                <i ng-class="{true:'icon-pause', false:'icon-play'}[streaming]"></i>
-              </div>
-            </div>
-            <div class="span2 btn-group btn-small">
-              <a href="#" ng-click="switchStream('stack')" ng-class="" class="btn">Stacked</a>
-              <a href="#" ng-click="switchStream('stream')" class="btn">Stream</a>
-              <a href="#" ng-click="switchStream('expand')" class="btn">Expanded</a>
-            </div>
-            <form class="form-inline pull-right">
-                <label for="stream-items-len">Qty of keywords  (1 to 20):
-                  <input id="stream-items-len" type="number" name="stream-items-len" min="1" max="20" value="{{streamSize}}" ng-model="streamSize" ng-change="setStreamSize(streamSize)">
-                </label>
-                <label for="granularity">Granularity: {{streamLength}} %
-                  <input id="granularity" type ="range" min ="10" max="100" step ="10" value ="{streamLength}" ng-model="streamLength" ng-change="setStreamLength(streamLength)"/>
-                </label>
-                <label for="">Timeframe:
-                  <input id="timeframe" type ="range" min ="10" max="100" step ="10"/>
-                </label>
-              
-            </form>
-          </ul>
-        </div>
-        
+  <div class="span1">    
+    <div class="btn" ng-click="startStopStream()">
+      <i ng-class="{true:'icon-pause', false:'icon-play'}[streaming]"></i>
     </div>
+  </div>
+
+  <div class="span2 btn-group btn-small">
+    <a href="#" ng-click="switchStream('stack')" ng-class="" class="btn">Stacked</a>
+    <a href="#" ng-click="switchStream('stream')" class="btn">Stream</a>
+    <a href="#" ng-click="switchStream('expand')" class="btn">Expanded</a>
+  </div>
+
+  <form class="form-inline pull-right">
+      <label for="stream-items-len">Qty of keywords  (1 to 20):
+        <input id="stream-items-len" type="number" name="stream-items-len" min="1" max="20" value="{{streamSize}}" ng-model="streamSize" ng-change="setStreamSize(streamSize)">
+      </label>
+      <label for="granularity">Granularity: {{streamLength}} %
+        <input id="granularity" type ="range" min ="10" max="100" step ="10" value ="{streamLength}" ng-model="streamLength" ng-change="setStreamLength(streamLength)"/>
+      </label>
+      <label for="">Timeframe:
+        <input id="timeframe" type ="range" min ="10" max="100" step ="10"/>
+      </label>  
+  </form>
+</div>

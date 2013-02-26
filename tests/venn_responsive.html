@@ -1,0 +1,96 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="author" content="Chapman Siu">
+    <title>Area-proportional Venn diagrams</title>
+
+</head>
+
+<body>
+
+
+<h1>Responsive Venn diagram D3.js example</h1>
+Taken from stanford.edu/~helenlu/cs448b/example1.html
+
+<div id="vis"></div>
+
+    <script type="text/javascript" src="../public/lib/d3/d3.v2.min.js"></script>
+    <script type="text/javascript" src="../public/lib/d3/d3.venn.js"></script>
+    <script type="text/javascript" src="../public/lib/d3/numeric.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+<script type="text/javascript">
+//based on stanford.edu/~helenlu/cs448b/example1.html
+
+//get size of browser to determine size of things
+var w_width = $(window).width();
+draw();
+$(window).resize(function() {
+    var w_width = $(window).width();
+    var w_height = $(window).height();
+    //$('#browserInfo').text('Browser (Width : ' + w_width + ' , Height :' + w_height + ' )');
+    
+    draw();
+});
+
+// Initialize data
+function draw() {
+    $('#chart').remove();
+
+    var B="Data Analysts", A="Business";
+    var groups = [A, B];
+
+    var data = [];
+    //for (var i=0; i<3; i++) data.push([A]);
+    for (var i=0; i<2; i++) data.push([A]);
+    data.push([A, B]);
+    for (var i=0; i<2; i++) data.push([B]);
+    
+    // Standard D3
+    var color = d3.scale.category10();
+    var venn = d3.layout.venn().size([Math.min(parseInt(Math.min($(window).width(),$(window).height())*.75),800),Math.min(parseInt(Math.min($(window).width(),$(window).height())*.65),600)]);
+    //var venn = d3.layout.venn().size([300,250]);
+    var circle = d3.svg.arc().innerRadius(0).startAngle(0).endAngle(2*Math.PI);
+
+    var vis = d3.select("#vis")
+      .append("svg")
+        .data([data])
+        .attr("width", Math.min(parseInt($(window).width()*1),800))
+        .attr("height", Math.min(parseInt($(window).width()*.8),600))
+        .attr("id","chart")
+        /*.attr("viewBow","0 0 "+Math.min(parseInt($(window).width()),800)+" "+Math.min(parseInt($(window).width()*.8),650))    */
+        .attr("preserveAspectRatio", "xMinYMin meet");
+        /*.attr("height","100%") 
+        .attr("width","100%") 
+        .attr("viewBox","0 0 50 50"); */
+        ;
+
+    var circles = vis.selectAll("g.arc")
+        .data(venn)              
+      .enter().append("g")
+        .attr("class", "arc")
+        .attr("transform", function(d, i){ return "translate(" + (50 + d.x) + "," + (50 + d.y) + ")"; });
+        
+    circles.append("path")
+        .attr("fill", function(d, i) { return color(i); })
+        .attr("opacity", 0.5)
+        .attr("d", circle);
+    circles.append("text")
+        .attr("text-anchor", "middle")
+        .text(function(d, i) { return d.label; })
+        .attr("fill", function(d, i) { return color(i); })
+        .attr("x", function(d, i) { return d.labelX; })
+        .attr("y", function(d, i) { return d.labelY; });
+}
+
+</script>
+
+</body>
+
+
+
+</html>

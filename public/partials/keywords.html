@@ -1,0 +1,42 @@
+<div id="keywords" class="row-fluid">
+
+  <div class="offset1">
+    <!-- nothing -->
+  </div>
+
+  <div id="keywords-list" class="span9">
+  
+    <div 
+      class="btn keyword-item keyword-{{$index}} {{item.key}} {{item.state}} btn-draggable" 
+      ng-repeat="item in keywords" 
+      data-drag="true" 
+      data-jqyoui-options="{revert: 'invalid'}"  
+      jqyoui-draggable="{index: {{$index}}, animate:true}"
+      ng-mouseenter="stackFadeIn($index)" 
+      ng-mouseleave="stackFadeOut($index)" 
+      ng-model="keywords" 
+      >
+
+    <!-- toggle -->
+    <!-- ng-click="btnClick(item)"  -->
+      
+    <!--  
+     <div class="popover fade top in" style="top: 0px; left: 58px; display: block;">
+
+        <div class="arrow"></div>
+        <h3 class="popover-title">Popover on top</h3>
+        <div class="popover-content">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</div>
+
+      </div>
+      -->
+      <p>
+        <span style="color: {{ colors($index) }}" class="circle">
+          <i class="icon-plus-sign"></i>
+        </span> 
+        {{item.key}}
+      </p>
+    </div>
+
+  </div><!-- end keyword list -->
+
+ </div>

@@ -1,0 +1,17 @@
+<div class="dropzone">
+
+  <a href="#" class="btn" ng-click="setVennData('yes','no')">Change data</a>
+  <span class="info">
+    Compare words here 
+  </span> 
+
+</div>
+
+<div venn-compare>
+
+  <div ng-repeat="item in vennData" class="btn">
+    {{ item }}
+  </div>
+
+</div>
+<div id="venn"></div>

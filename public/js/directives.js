@@ -144,46 +144,139 @@ function updateGraph (val, scope) {
     // scope.chart.dispatch.on('changeState', function(e) { nv.log('New changeState:', JSON.stringify(e)); });
 }
 
-// USELESS
-// Mouse events
-app.directive('btnClick', function( $document, mouse){
+app.directive('vennCompare', function( ){
     
-    // Mouse Handle Actions
+    return {
+            // restrict: 'E',
+            // terminal: true,
+            // scope: {
+            //   vennData: '='
+            // },
+            link: function (scope, element, attrs) {
 
-    console.log(scope.chart.legend);
+                // console.log(scope.vennData)
+
+                scope.$watch('vennData', function(newVal, oldVal) {
+                    
+                    // console.log(scope.vennData);
+
+                    if(newVal && newVal.length && scope.venn) {
+
+                        console.log(newVal);
+                        redrawVenn(newVal, scope, function (venn) {
+                            scope.venn = venn;
+                        })
+
+                    } else if(newVal && newVal.length) {
+
+                        initVenn(newVal, function (venn) {
+                            scope.venn = venn;
+                        });
+
+                    } 
+
+                 }, true);
+            }
+    }
+
+});
+
+
+function initVenn (newVal, callback) {
     
-    scope.chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); });
+    console.log("init venn diagram " + newVal)
 
-    scope.chart.dispatch.on('changeState', function(e) { nv.log('New changeState:', JSON.stringify(e)); });
+    var B=newVal[0], A=newVal[1];
+    
+    var groups = [A, B];
+    var w = 200, h = 150;
 
-    /*
-    scope.chart.legend.dispatch.on('legendClick.hi', function(e){
-      console.log('legend was clicked', 'namespace:', 'hi');
-    });
+    var data = [];
+    for (var i=0; i<2; i++) data.push([A]);
+    data.push([A, B]);
+    for (var i=0; i<2; i++) data.push([B]);
 
-    scope.chart.stacked.dispatch.on('areaClick.toggle', function(e){
-      console.log('stacked was toggled', 'namespace:', 'toggle');
-      nv.log('New stack toggle:', JSON.stringify(e));
-    });
+    // Standard D3
+    var color = d3.scale.category10();
+    var venn = d3.layout.venn().size([w, h]);
+    // var venn = d3.layout.venn().size([Math.min(parseInt(Math.min($(window).width(),$(window).height())*.75),200),Math.min(parseInt(Math.min($(window).width(),$(window).height())*.65),150)]);
 
-    scope.chart.dispatch.on('changeState', function(e) {
-        nv.log('New changeState:', JSON.stringify(e));
-    })
+    var circle = d3.svg.arc().innerRadius(0).startAngle(0).endAngle(2*Math.PI);
+    // console.log(venn)
+
+    var vis = d3.select("#venn")
+        .append("svg")
+        .data([data])
+        .attr("width", w)
+        .attr("height", h)
+        // .attr("preserveAspectRatio", "xMinYMin meet");
+        // .attr("width", Math.min(parseInt($(window).width()*1),200))
+        // .attr("height", Math.min(parseInt($(window).width()*.8),150))
+
+    var circles = vis.selectAll("g.arc")
+        .data(venn)
+        .enter().append("g")
+            .attr("class", "arc")
+            .attr("transform", function(d, i){ return "translate(" + ( d.x) + "," + ( 30+ d.y) + ")"; });
+
+    // console.log(circles)
+
+        circles.append("path")
+            .attr("fill", function(d, i) { return color(i); })
+            .attr("class", "venn-circle")
+            .attr("opacity", 0.5)
+            .attr("d", circle);
+
+        circles.append("text")
+            .attr("text-anchor", "middle")
+            .attr("class", "venn-text")
+            .text(function(d, i) { return d.label; })
+            .attr("fill", function(d, i) { return color(i); })
+            .attr("x", function(d, i) { return d.labelX; })
+            .attr("y", function(d, i) { return d.labelY; });
 
 
-*/
-    // scope.chart.stacked.dispatch.on('stackedClick.hi', function(e){
-    //   console.log('stack was clicked', 'namespace:', 'hi');
-    // });
+    callback(vis);
 
-    // scope.chart.dispatch.on('legendClick', function(e) { nv.log('New legendClick:', JSON.stringify(e)); });
+}
 
+// keywords is an array
+function redrawVenn(newVal, scope, callback) {
+    
+    console.log("redraw venn")
 
-    // console.log(scope.chart);
+    var color = d3.scale.category20b();
 
-})
+    var B=newVal[0], A=newVal[1];
+    var groups = [A, B];
 
+    // recreate data
+    var data = [];
+    for (var i=0; i<2; i++) data.push([A]);
+    data.push([A, B]);
+    for (var i=0; i<2; i++) data.push([B]);
 
+    // var venn = d3.layout.venn().size([300,250]);
+    
+    var vis = d3.select("#venn")
+        .data([data])
+        // .data(venn)
+        .transition()
+
+    var circles = vis.selectAll("g.arc")
+        .attr("transform", function(d, i){ return "translate(" + ( d.x) + "," + ( 30+ d.y) + ")"; });
+
+    vis.selectAll(".venn-text")
+        .duration(750)
+        .text(function(d, i) { return newVal[i]; })
+        .attr("fill", function(d, i) { return color(i); });
+
+    vis.selectAll(".venn-circle")
+        .duration(750)
+        .attr("fill", function(d, i) { return color(i); });
+
+    // callback(vis)
+}
 
 
 

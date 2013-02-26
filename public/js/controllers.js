@@ -1,239 +1,251 @@
 // controllers.js
 
 app.controller('MainCtrl', function($scope, $http) {
-    
-/* VARIABLES --------------------------------------------------------------
-    */
-    $scope.name = 'Your brand';
+        
+    /* VARIABLES --------------------------------------------------------------
+        */
+        $scope.name = 'Your brand';
 
-    $scope.keywords = []; // array to store keywords text
-    $scope.colors = []; // global array to store keywords color
+        $scope.keywords = []; // array to store keywords text
+        $scope.colors = []; // global array to store keywords color
 
-    $scope.list = [ {'key':'drag me'}];
+        $scope.list = [ {'key':'drag me'}];
 
-/* METHODS --------------------------------------------------------------
-    */
+    /* METHODS --------------------------------------------------------------
+        */
 
-    $scope.saveToCsv = saveToCsv;
-    $scope.copyToClipboard = copyToClipboard;
+        $scope.saveToCsv = saveToCsv;
+        $scope.copyToClipboard = copyToClipboard;
 
-/* DRAG'N DROP --------------------------------------------------------------
-    */    
-    // console.log($scope.keywords.length);
-    // Drag 'n drop callbacks
-        $scope.startCallback = function(event, ui) {
-            console.log('You started draggin');
-        };
+    /* DRAG'N DROP --------------------------------------------------------------
+        */    
+        // console.log($scope.keywords.length);
+        // Drag 'n drop callbacks
+            $scope.startCallback = function(event, ui) {
+                console.log('You started draggin');
+            };
 
-        $scope.stopCallback = function(event, ui) {
-          console.log('Why did you stop draggin me?');
-        };
+            $scope.stopCallback = function(event, ui) {
+              console.log('Why did you stop draggin me?');
+            };
 
-        $scope.dragCallback = function(event, ui) {
-          console.log('hey, look I`m flying');
-        };
+            $scope.dragCallback = function(event, ui) {
+              console.log('hey, look I`m flying');
+            };
 
-        $scope.dropCallback = function(event, ui) {
-          console.log('hey, you dumped me :-(');
-        };
+            $scope.dropCallback = function(event, ui) {
+              console.log('hey, you dumped me :-(');
+            };
 
-        $scope.overCallback = function(event, ui) {
-          console.log('Look, I`m over you');
-        };
+            $scope.overCallback = function(event, ui) {
+              console.log('Look, I`m over you');
+            };
 
-        $scope.outCallback = function(event, ui) {
-          console.log('I`m not, hehe');
-        };
+            $scope.outCallback = function(event, ui) {
+              console.log('I`m not, hehe');
+            };
 
 });
 
 app.controller('StreamCtrl', function($scope, $http) {
 
-/* VARIABLES --------------------------------------------------------------
-    */
-    // some global variables
-    
-    $scope.streamSize = 5; // default number of keywords (y values)
-    $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
-    
-    $scope.colors = d3.scale.category20c(); // define d3 color scheme    
-    $scope.streaming = false;  // to start/stop streaming
-
-    // console.log($scope)
-
-/* KEYWORDS BUTTONS ----------------------------------------------------------------
-    */
-
-    // toggle stream on click
-    $scope.btnClick = function btnClick(item) {
+    /* VARIABLES --------------------------------------------------------------
+        */
+        // some global variables
         
-        var chart = $scope.$$childHead.chart;
-
-        // console.log(item)
-        // var chart = $scope.$$childHead.chart;
-        var enabled = true;
-
-        var svg = d3.select("#stream-viz")
-            .attr("class", "blabla")
-
-        svg.each(function(data) {
-
-            var container = d3.select(this);
-
-            // toggle graph area
-            data.map(function(d) {
-                // console.log(d)
-                // colors()
-                if(d.key == item.key) d.disabled = (d.disabled ==true) ? d.disabled =false : d.disabled = true; //
-                enabled = d.disabled;
-                return d;
-            });
-
-            // redraw graph
-            // chart(svg);
-            svg.transition().duration(500).call(chart);
-            console.log(item)
-            // btn class
-            var state =  (item.state == "enabled") ? "enabled" : "disabled";
-            // item.state = state;
-
-
-            return item.state;
-
-        })
-
-    }
-
-    // Fade in/out for stream stacks on mouse over
-    $scope.stackFadeIn = function stacksFadeIn(index) {
-
-        // console.log("other stacks fade to "+ index);
-
-        var svg = d3.select("#stream-viz");
-        var path = svg.select('.nv-areaWrap').selectAll('path.nv-area')
-        // console.log(path, index)
-
-        for (var i = 0; i < path[0].length; i++) {
-
-            if( i == index) d3.select(path[0][i]).classed('hover', true);
-            else d3.select(path[0][i]).classed('lower', true);
-
-        };
+        $scope.streamSize = 5; // default number of keywords (y values)
+        $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
         
-    }
+        $scope.colors = d3.scale.category20c(); // define d3 color scheme    
+        $scope.streaming = false;  // to start/stop streaming
 
-    $scope.stackFadeOut = function stackFadeOut(index) {
+        // console.log($scope)
 
-        var svg = d3.select("#stream-viz");
-        var path = svg.select('.nv-areaWrap').selectAll('path.nv-area')
+    /* KEYWORDS BUTTONS ----------------------------------------------------------------
+        */
 
-        for (var i = 0; i < path[0].length; i++) {
-
-            if( i == index) d3.select(path[0][i]).classed('hover', false);
-            else d3.select(path[0][i]).classed('lower', false);
-
-        };
-        
-    }
-
-/* DATA FUNCTIONS ----------------------------------------------------------------
-    */
-
-    $scope.data= []; // array to store all values
-    
-    // init with first values
-    parseStream( $scope.streamSize, $scope.streamLength, function( initData ) {
-
-        $scope.data=initData;
-    } )
-
-    // update global keyword list
-    updateKeywordList($scope.data, function (list) {
-
-        $scope.$parent.keywords = list;
-
-    })
-    
-    // console.log($scope)
-
-
-    // Let's stream some randomness
-    setInterval(function(){ // tick every second with fake data
-
-        parseStream( $scope.streamSize, $scope.streamLength, function( data ) {
-
-            $scope.data=data;
+        // toggle stream on click
+        $scope.btnClick = function btnClick(item) {
             
-            // update global scope keyword list
-            updateKeywordList($scope.data, function (list) {
-                $scope.$parent.keywords = list;
+            var chart = $scope.$$childHead.chart;
+
+            // console.log(item)
+            // var chart = $scope.$$childHead.chart;
+            var enabled = true;
+
+            var svg = d3.select("#stream-viz")
+                .attr("class", "blabla")
+
+            svg.each(function(data) {
+
+                var container = d3.select(this);
+
+                // toggle graph area
+                data.map(function(d) {
+                    // console.log(d)
+                    // colors()
+                    if(d.key == item.key) d.disabled = (d.disabled ==true) ? d.disabled =false : d.disabled = true; //
+                    enabled = d.disabled;
+                    return d;
+                });
+
+                // redraw graph
+                // chart(svg);
+                svg.transition().duration(500).call(chart);
+                console.log(item)
+                // btn class
+                var state =  (item.state == "enabled") ? "enabled" : "disabled";
+                // item.state = state;
+
+
+                return item.state;
+
             })
 
-    } )
+        }
 
-    },1000);
-    
-/* STREAM TOOLBAR ----------------------------------------------------------------
-    */
+        // Fade in/out for stream stacks on mouse over
+        $scope.stackFadeIn = function stacksFadeIn(index) {
 
-    // switch for stream style
-    $scope.switchStream = function switchStream (type) {
-        console.log(type)
-        var style  = { style : type}
+            // console.log("other stacks fade to "+ index);
 
-        // var chart = $scope.$$childHead.chart;
-        $scope.$$childHead.chart.style(type)
-        console.log($scope.$$childHead.chart.state())
+            var svg = d3.select("#stream-viz");
+            var path = svg.select('.nv-areaWrap').selectAll('path.nv-area')
+            // console.log(path, index)
 
+            for (var i = 0; i < path[0].length; i++) {
 
-        var svg = d3.select("#stream-viz")
-        $scope.$$childHead.chart(svg)
-    }
+                if( i == index) d3.select(path[0][i]).classed('hover', true);
+                else d3.select(path[0][i]).classed('lower', true);
 
-    // play/stop button
-    $scope.startStopStream = function startStopStream () {
-        $scope.streaming = ($scope.streaming) ? false : true;
-        // console.log($scope.streaming);
-        return $scope.streaming;
-    }
+            };
+            
+        }
 
-    // set number of keywords
-    $scope.setStreamSize = function setStreamSize (size) {
+        $scope.stackFadeOut = function stackFadeOut(index) {
 
-        $scope.streamSize = size;
-        // console.log("$scope.streamSize : "+$scope.streamSize);
+            var svg = d3.select("#stream-viz");
+            var path = svg.select('.nv-areaWrap').selectAll('path.nv-area')
 
-    }
+            for (var i = 0; i < path[0].length; i++) {
+
+                if( i == index) d3.select(path[0][i]).classed('hover', false);
+                else d3.select(path[0][i]).classed('lower', false);
+
+            };
+            
+        }
+
+    /* DATA FUNCTIONS ----------------------------------------------------------------
+        */
+
+        $scope.data= []; // array to store all values
         
-    // set time granularity
-    $scope.setStreamLength = function setStreamLength (size) {
-        $scope.streamLength = size;
-        console.log("$scope.streamLength : "+$scope.streamLength);
+        // init with first values
+        parseStream( $scope.streamSize, $scope.streamLength, function( initData ) {
 
-    } 
+            $scope.data=initData;
+        } )
 
-    // set timeframe
-    $scope.timeframes = [  
-        {"name": "30 s", "value": "30"},  
-        {"name": "1 min", "value": "60"},
-        {"name": "10 min", "value": "600"},
-        {"name": "30 min", "value": "1800"},
-        {"name": "1 h", "value": "3600"},
-        {"name": "2h", "value": "7200"},
-        {"name": "3h", "value": "10800"},
-        {"name": "10h", "value": "36000"},
-        {"name": "1 day", "value": "86400"},
-        {"name": "7 day", "value": "604800"}
-    ]
+        // update global keyword list
+        updateKeywordList($scope.data, function (list) {
 
-    $scope.setTimerange = function setTimerange(timerange) {
-        console.log(timerange);
-        // do sth...
+            $scope.$parent.keywords = list;
 
-    }
+        })
+        
+        // console.log($scope)
+
+
+        // Let's stream some randomness
+        setInterval(function(){ // tick every second with fake data
+
+            parseStream( $scope.streamSize, $scope.streamLength, function( data ) {
+
+                $scope.data=data;
+                
+                // update global scope keyword list
+                updateKeywordList($scope.data, function (list) {
+                    $scope.$parent.keywords = list;
+                })
+
+        } )
+
+        },1000);
+        
+    /* STREAM TOOLBAR ----------------------------------------------------------------
+        */
+
+        // switch for stream style
+        $scope.switchStream = function switchStream (type) {
+            console.log(type)
+            var style  = { style : type}
+
+            // var chart = $scope.$$childHead.chart;
+            $scope.$$childHead.chart.style(type)
+            console.log($scope.$$childHead.chart.state())
+
+
+            var svg = d3.select("#stream-viz")
+            $scope.$$childHead.chart(svg)
+        }
+
+        // play/stop button
+        $scope.startStopStream = function startStopStream () {
+            $scope.streaming = ($scope.streaming) ? false : true;
+            // console.log($scope.streaming);
+            return $scope.streaming;
+        }
+
+        // set number of keywords
+        $scope.setStreamSize = function setStreamSize (size) {
+
+            $scope.streamSize = size;
+            // console.log("$scope.streamSize : "+$scope.streamSize);
+
+        }
+            
+        // set time granularity
+        $scope.setStreamLength = function setStreamLength (size) {
+            $scope.streamLength = size;
+            console.log("$scope.streamLength : "+$scope.streamLength);
+
+        } 
+
+        // set timeframe
+        $scope.timeframes = [  
+            {"name": "30 s", "value": "30"},  
+            {"name": "1 min", "value": "60"},
+            {"name": "10 min", "value": "600"},
+            {"name": "30 min", "value": "1800"},
+            {"name": "1 h", "value": "3600"},
+            {"name": "2h", "value": "7200"},
+            {"name": "3h", "value": "10800"},
+            {"name": "10h", "value": "36000"},
+            {"name": "1 day", "value": "86400"},
+            {"name": "7 day", "value": "604800"}
+        ]
+
+        $scope.setTimerange = function setTimerange(timerange) {
+            console.log(timerange);
+            // do sth...
+
+        }
 
 });
 
+app.controller('compareCtrl', function($scope, $http){
+
+    $scope.vennData = ["oui", "non"];
+
+    $scope.setVennData = function setVennData(item1, item2) {
+        // console.log($scope.vennData);
+        $scope.vennData = [item1, item2];
+    }
+
+
+
+})
 
 
 // DATA parsing 

@@ -1,5 +1,5 @@
 <!-- <h3>Your list</h3> -->
-      <div class="rounded-corners" id="final-list" data-drop="true" ng-model='list' jqyoui-droppable="{ multiple:true  }">
+      <div class="dropzone rounded-corners" id="final-list" data-drop="true" ng-model='list' jqyoui-droppable="{ multiple:true  }">
         <!-- <div ui:sortable class="unstyled row"> -->
         <ul class="unstyled">
             <li class="btn btn-info btn-dragabble" ng-repeat="item in list" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list" jqyoui-draggable="{index: {{$index}},animate:true}">
