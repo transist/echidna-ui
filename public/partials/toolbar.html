@@ -1,14 +1,19 @@
 <div id="toolbar" class="row-fluid">
 
-  <div class="span3">
-    <h1>{{name}}</h1>
-  </div>
+  <div class="span5">
+  
+    <h2>{{name}}
 
-  <div class="span2">      
-    <div>
-        <a href="" class="btn">Action 1</a>
-        <a href="" class="btn">Action 2</a>
-    </div>
+      <button type="button" class="btn btn-small" bs-modal="'partials/modal-filters.html'">
+        <i class="icon-plus-sign"></i>
+          Add a Filter
+      </button>
+      <button type="button" class="btn btn-small" bs-modal="'partials/modal-clients.html'">
+          <i class="icon-plus-sign">
+            Add a Client
+          </i>
+      </button>
+    </h2>
   </div>
 
   <div class="btn-toolbar pull-right">

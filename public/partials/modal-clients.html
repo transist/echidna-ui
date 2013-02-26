@@ -1,11 +1,16 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-  <h3 id="myModalLabel">Modal header</h3>
+  <h3 id="myModalLabel">Add a Client</h3>
 </div>
 <div class="modal-body">
-  <p>{{modal.content}}</p>
-  <br />
-  <pre>2 + 3 = {{ 2 + 3 }}</pre>
+  <form action="">
+      <label for="client-name">Client<input type="text" name="client-name" id="client-name"></label>
+      <label for="clients-notes">
+        Notes
+        <textarea name="client-notes" id="client-notes" cols="30" rows="10"></textarea>  
+      </label>
+  </form>
+
 </div>
 <div class="modal-footer">
   <button class="btn" ng-click="dismiss()">Close</button>

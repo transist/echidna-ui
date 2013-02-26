@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="echidna" >
+<html lang="en" ng-app="echidna">
 
 <head>
   <meta charset="utf-8">
@@ -74,8 +74,16 @@
             <div class="nav-collapse collapse pull-right">
               <ul class="nav">
                 <li class="active"><a href="">Home</a></li>
-                <li><a href="">Clients</a></li>
-                <li><a href="">Filter presets</a></li>
+                <li>
+                  <a href="">
+                    Clients
+                  </a>
+                </li>
+                <li>
+                  <a href="">
+                    Filter presets
+                  </a>
+                </li>
                 <li><a href="">Account</a></li>
                 <li><a href="">Logout</a></li>
               </ul>
@@ -92,8 +100,6 @@
 
       <div class="span6">
         <ng-include src="'partials/menu.html'"> </ng-include>
-        <button type="button" class="btn" bs-modal="'partials/modal-compare.html'">Modal test</button>
-
       </div>
       
       <div class="span3" ng-controller="compareCtrl">
