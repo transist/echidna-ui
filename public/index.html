@@ -18,10 +18,14 @@
   <script src="lib/jquery/jquery-ui.min.js"></script>
   <script src="lib/bootstrap/bootstrap.min.js"></script>
 
+
   <script src="lib/angular/angular.js"></script>
   <script src="lib/angular/angular-resource.min.js"></script>
   <script src="lib/angular/angular-ui.js"></script>
   <script src="lib/angular/angular-dragdrop.min.js"></script>
+
+  <script src="lib/angularstrap.min.js"></script>
+  <!-- <script src="lib/ui.bootstrap.min.js"></script> -->
 
   <!-- <script src="http://d3js.org/d3.v2.js"></script> -->
   <script src="lib/d3/d3.v2.min.js"></script>
@@ -88,6 +92,15 @@
 
       <div class="span6">
         <ng-include src="'partials/menu.html'"> </ng-include>
+        <!-- <a href="#modal-compare" role="button" class="btn" data-toggle="modal">Modal test</a>
+        <ng-include src="'partials/modal-compare.html'"> </ng-include> -->
+        <!-- Button to trigger modal -->
+
+        <!-- Button to trigger modal -->
+        <button type="button" class="btn" bs-modal="'partials/modal-compare.html'">Model test</button>
+        <!-- <button type="button" class="btn btn-large btn-primary" bs-modal="'modal.html'">Click to open modal</button> -->
+
+
       </div>
       
       <div class="span3" ng-controller="compareCtrl">

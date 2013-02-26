@@ -11,6 +11,8 @@ app.controller('MainCtrl', function($scope, $http) {
 
         $scope.list = [ {'key':'drag me'}];
 
+        $scope.modal = {content: 'Hello Modal', saved: false};
+
     /* METHODS --------------------------------------------------------------
         */
 
@@ -44,6 +46,11 @@ app.controller('MainCtrl', function($scope, $http) {
             $scope.outCallback = function(event, ui) {
               console.log('I`m not, hehe');
             };
+
+
+    /* MOUSE ACTIONS -------------------------------------------------
+        */
+        
 
 });
 
@@ -242,7 +249,6 @@ app.controller('compareCtrl', function($scope, $http){
         // console.log($scope.vennData);
         $scope.vennData = [item1, item2];
     }
-
 
 
 })
