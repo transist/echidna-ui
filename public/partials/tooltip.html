@@ -1,0 +1,22 @@
+<!-- Popover (external ./partials/popover.html or inline ng-template)  -->
+<button type="button" class="close" ng-click="dismiss()">×</button>
+<h4 style="color: {{ colors($index) }}">{{item.key}}</h4>
+<form name="popoverForm">
+  <p ng-bind-html-unsafe="popover.content"></p>
+  <div class="form-actions">
+    <p>
+        <a href="#">
+            <i class="icon-plus-sign"></i>
+            Add to list
+    </a>
+    </p>
+    <p>
+        <a href="#" ng-click="stackFocus($index)">
+            <i class="icon-eye-open"></i>
+            Inspect
+        </a>
+    </p>
+    
+    <!-- <button type="button" class="btn close-popover" >Close</button> -->
+  </div>
+</form>

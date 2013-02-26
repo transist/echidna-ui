@@ -12,10 +12,14 @@
       data-drag="true" 
       data-jqyoui-options="{revert: 'invalid'}"  
       jqyoui-draggable="{index: {{$index}}, animate:true}"
-      ng-mouseenter="stackFadeIn($index)" 
-      ng-mouseleave="stackFadeOut($index)" 
       ng-model="keywords"
+      data-placement="top"
+      data-unique="1"
+      bs-popover="'partials/tooltip.html'"
+      ng-mouseenter="stackFadeIn($index)" 
+      ng-mouseleave="stackFadeOut($index)"
       >
+      <!--  --> 
 
     <!-- toggle -->
     <!-- ng-click="btnClick(item)"  -->

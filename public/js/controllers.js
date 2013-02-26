@@ -72,14 +72,9 @@ app.controller('StreamCtrl', function($scope, $http) {
         */
 
         // toggle stream on click
-        $scope.btnClick = function btnClick(item) {
+        $scope.stackFocus = function stackFocus(index) {
             
-            var chart = $scope.$$childHead.chart;
-
-            // console.log(item)
-            // var chart = $scope.$$childHead.chart;
-            var enabled = true;
-
+            // console.log(index)
             var svg = d3.select("#stream-viz")
                 .attr("class", "blabla")
 
@@ -88,26 +83,36 @@ app.controller('StreamCtrl', function($scope, $http) {
                 var container = d3.select(this);
 
                 // toggle graph area
-                data.map(function(d) {
+                data.map(function(d, i) {
+                    
+                    if(i == index) d.disabled == true;
+                    else d.disabled = (d.disabled ==false) ? d.disabled =true : d.disabled = false;
+
                     // console.log(d)
                     // colors()
-                    if(d.key == item.key) d.disabled = (d.disabled ==true) ? d.disabled =false : d.disabled = true; //
-                    enabled = d.disabled;
+                    // if(d.key == item.key) d.disabled = (d.disabled ==true) ? d.disabled =false : d.disabled = true; //
+                    // enabled = d.disabled;
                     return d;
                 });
 
                 // redraw graph
                 // chart(svg);
-                svg.transition().duration(500).call(chart);
-                console.log(item)
+                svg.transition().duration(500).call($scope.$$childHead.chart);
+                // console.log(item)
                 // btn class
-                var state =  (item.state == "enabled") ? "enabled" : "disabled";
+                // var state =  (item.state == "enabled") ? "enabled" : "disabled";
                 // item.state = state;
 
 
-                return item.state;
+                // return item.state;
 
             })
+
+        }
+
+
+        $scope.showInGraph = function showInGraph (index) {
+            
 
         }
 
@@ -142,6 +147,16 @@ app.controller('StreamCtrl', function($scope, $http) {
             };
             
         }
+
+
+        $("close-popover").click(function(e) {
+            console.log("close it")
+
+            $(".popover.in").each(function() {
+                $(this).popover('hide');
+            });
+        });
+        
 
     /* DATA FUNCTIONS ----------------------------------------------------------------
         */
