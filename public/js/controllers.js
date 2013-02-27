@@ -13,6 +13,28 @@ app.controller('MainCtrl', function($scope, $http) {
 
         $scope.modal = {content: 'Hello Modal', saved: false};
 
+
+    /* FILTERING --------------------------------------------------------------
+
+        Data formatting for filters
+
+        Object Filter {
+            gender  : "0", "1", "2" (Both, Men, Women)
+            age     : "0", "1", "2", "3", "4" (All, 18-, 24-, 35-, 40+)
+            tier    : "0", "1", "2", "3" (All, Tier 1, Tier 2, Tier 3)
+            city    : "pinyin" (pinyin formatted name of a city)
+        } 
+
+
+        */
+
+        $scope.activeFilter = {
+            gender : "B", 
+
+
+        }
+
+
     /* METHODS --------------------------------------------------------------
         */
 
@@ -63,7 +85,7 @@ app.controller('StreamCtrl', function($scope, $http) {
         $scope.streamSize = 5; // default number of keywords (y values)
         $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
         
-        $scope.colors = d3.scale.category20c(); // define d3 color scheme    
+        $scope.colors = d3.scale.category20(); // define d3 color scheme    
         $scope.streaming = false;  // to start/stop streaming
 
         // console.log($scope)
