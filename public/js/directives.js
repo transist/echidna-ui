@@ -115,7 +115,7 @@ function redrawStreamGraph (newVal, scope) {
       .datum( newVal )
         .transition().duration(500).call(scope.chart);
 
-    nv.utils.windowResize(scope.chart.update);
+    // nv.utils.windowResize(scope.chart.update);
 
     // scope.chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); });
     // scope.chart.dispatch.on('changeState', function(e) { nv.log('New changeState:', JSON.stringify(e)); });
