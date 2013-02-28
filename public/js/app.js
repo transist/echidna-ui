@@ -2,5 +2,4 @@
 var echidna = {};
 
 // NOTE: ng-app="hello" + AngularUI module dependency
-var app = angular.module('echidna', ['ngResource','ui','jqyoui', '$strap.directives']);
-
+var app = angular.module('echidna', [ 'ngResource','ui','jqyoui', '$strap.directives']);

@@ -29,7 +29,7 @@
               <span class="icon-bar"></span>
             </a>
 
-            <a href="#" class="brand">Words & Trends Generator</a>
+            <a href="#" class="brand">{{appName}}</a>
 
             <div class="nav-collapse collapse pull-right">
               <ul class="nav">
@@ -73,7 +73,7 @@
     
     <div id="flow" ng-controller="StreamCtrl">
       <ng-include src="'partials/keywords.html'"></ng-include>
-      <stream-viz val="data"></stream-viz>
+      <div stream-viz></div>
       <ng-include src="'partials/stream.html'"></ng-include>
     </div>
 
@@ -122,6 +122,7 @@
 
 <!-- app files -->
 <script src="js/app.js"></script>
+<script src="js/services.js"></script>
 <script src="js/directives.js"></script>
 <script src="js/controllers.js"></script>
 </html>

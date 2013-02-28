@@ -6,34 +6,30 @@ app.controller('MainCtrl', function($scope, $http) {
         */
         $scope.name = 'Your brand';
 
+        $scope.appName = "Keywords & Trends generator"
+
+   
         $scope.keywords = []; // array to store keywords text
         $scope.colors = []; // global array to store keywords color
 
         $scope.list = [ {'key':'drag me'}];
 
         $scope.modal = {content: 'Hello Modal', saved: false};
+        
+        // $scope.apiClient = apiClient;
 
 
     /* FILTERING --------------------------------------------------------------
 
-        Data formatting for filters
-
-        Object Filter {
-            gender  : "0", "1", "2" (Both, Men, Women)
-            age     : "0", "1", "2", "3", "4" (All, 18-, 24-, 35-, 40+)
-            tier    : "0", "1", "2", "3" (All, Tier 1, Tier 2, Tier 3)
-            city    : "pinyin" (pinyin formatted name of a city)
-        } 
-
-
         */
 
-        $scope.activeFilter = {
-            gender : "B", 
-
-
-        }
-
+        // Init Stream
+        /* feedConfig( "Both", "All", "All", null, function(filter) {
+            
+            $scope.activeFilter = filter;
+        
+        })
+        */
 
     /* METHODS --------------------------------------------------------------
         */
@@ -69,14 +65,12 @@ app.controller('MainCtrl', function($scope, $http) {
               console.log('I`m not, hehe');
             };
 
-
     /* MOUSE ACTIONS -------------------------------------------------
         */
-        
 
 });
 
-app.controller('StreamCtrl', function($scope, $http) {
+app.controller('StreamCtrl', function($scope, $http, apiClient) {
 
     /* VARIABLES --------------------------------------------------------------
         */
@@ -89,6 +83,63 @@ app.controller('StreamCtrl', function($scope, $http) {
         $scope.streaming = false;  // to start/stop streaming
 
         // console.log($scope)
+
+    /* API & DATA --------------------------------------------------------------
+        */
+
+        console.log(apiClient)
+
+        apiClient.initStream();
+
+        apiClient.stream.then(function(data){
+
+            $scope.streamData= apiClient.streamData;
+            console.log("blabla")
+
+        }, function(error) {
+            
+            // handle error
+
+        })
+
+        /* OLD FUNCTIONS ----------------------------------------------------------------
+        */
+
+        /*
+        $scope.data= []; // array to store all values
+        
+        // init with first values
+        parseStream( $scope.streamSize, $scope.streamLength, function( initData ) {
+
+            $scope.data=initData;
+        } )
+
+        // update global keyword list
+        updateKeywordList($scope.data, function (list) {
+
+            $scope.$parent.keywords = list;
+
+        })
+        
+        // console.log($scope)
+
+
+        // Let's stream some randomness
+        setInterval(function(){ // tick every second with fake data
+
+            parseStream( $scope.streamSize, $scope.streamLength, function( data ) {
+
+                $scope.data=data;
+                
+                // update global scope keyword list
+                updateKeywordList($scope.data, function (list) {
+                    $scope.$parent.keywords = list;
+                })
+
+        } )
+
+        },1000);
+    */
 
     /* KEYWORDS BUTTONS ----------------------------------------------------------------
         */
@@ -135,7 +186,6 @@ app.controller('StreamCtrl', function($scope, $http) {
 
         $scope.showInGraph = function showInGraph (index) {
             
-
         }
 
         // Fade in/out for stream stacks on mouse over
@@ -179,43 +229,6 @@ app.controller('StreamCtrl', function($scope, $http) {
             });
         });
         
-
-    /* DATA FUNCTIONS ----------------------------------------------------------------
-        */
-
-        $scope.data= []; // array to store all values
-        
-        // init with first values
-        parseStream( $scope.streamSize, $scope.streamLength, function( initData ) {
-
-            $scope.data=initData;
-        } )
-
-        // update global keyword list
-        updateKeywordList($scope.data, function (list) {
-
-            $scope.$parent.keywords = list;
-
-        })
-        
-        // console.log($scope)
-
-
-        // Let's stream some randomness
-        setInterval(function(){ // tick every second with fake data
-
-            parseStream( $scope.streamSize, $scope.streamLength, function( data ) {
-
-                $scope.data=data;
-                
-                // update global scope keyword list
-                updateKeywordList($scope.data, function (list) {
-                    $scope.$parent.keywords = list;
-                })
-
-        } )
-
-        },1000);
         
     /* STREAM TOOLBAR ----------------------------------------------------------------
         */
@@ -236,9 +249,14 @@ app.controller('StreamCtrl', function($scope, $http) {
 
         // play/stop button
         $scope.startStopStream = function startStopStream () {
-            $scope.streaming = ($scope.streaming) ? false : true;
-            // console.log($scope.streaming);
-            return $scope.streaming;
+            apiClient.streaming = (apiClient.streaming) ? false : true;
+            
+            if(apiClient.streaming) apiClient.startStream()
+            else apiClient.stopStream()
+            
+            // console.log(apiClient.streaming);
+            
+            return apiClient.streaming;
         }
 
         // set number of keywords
@@ -290,46 +308,6 @@ app.controller('compareCtrl', function($scope, $http){
 
 })
 
-
-// DATA parsing 
-
-function parseStream( numberItems, streamLength, callback ) {
-
-    // Generate initial data
-    var keywords = [];
-
-    // build empty keywords
-    for (var i = 0; i < numberItems; i++) {
-        
-        var keyword = {};
-        keyword.key = "";
-        keyword.values = [];
-        keyword.sample = {};
-        keywords.push(keyword);
-
-    };
-
-    generateStream( numberItems, streamLength, function(data) {
-        // format data
-        // console.log (data);
-
-        for (var i = 0; i < numberItems; i++) {
-
-            for (var j = 0; j < streamLength; j++) {
-                data[i]
-                keywords[i].key = data[j][i].keyword;
-                keywords[i].values.push( [data[j][i].count, data[j][i].sliceid])
-                
-            };
-
-        };
-
-    })
-
-    callback(keywords);
-
-}
-
 function addPoint (newPoint, streamData, callback) {
     console.log(streamData[0].values.length)
 
@@ -368,8 +346,6 @@ function updateKeywordList(data, callback) {
     callback(list);
 
 }
-
-
 
 
 // EXPORT

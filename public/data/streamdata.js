@@ -116,7 +116,8 @@ var randomKeywords  = [
   "yesterday"
 ];
 
-function generateStream (numberItems, streamLength, callback) {
+
+function generateSlice (numberItems, streamLength, callback) {
   /*
     DATA STRUCTURE
 
@@ -154,4 +155,43 @@ function generateStream (numberItems, streamLength, callback) {
   };
   // console.log(stream);
   callback(stream);
+}
+
+
+// Parse x slices into a stream array for nvd3 
+function fakeInitStream( numberItems, streamLength, callback ) {
+
+    // Generate initial data
+    var keywords = [];
+
+    // build empty keywords
+    for (var i = 0; i < numberItems; i++) {
+        
+        var keyword = {};
+        keyword.key = "";
+        keyword.values = [];
+        keyword.sample = {};
+        keywords.push(keyword);
+
+    };
+
+    generateSlice( numberItems, streamLength, function(data) {
+        // format data
+        // console.log (data);
+
+        for (var i = 0; i < numberItems; i++) {
+
+            for (var j = 0; j < streamLength; j++) {
+                data[i]
+                keywords[i].key = data[j][i].keyword;
+                keywords[i].values.push( [data[j][i].count, data[j][i].sliceid])
+                
+            };
+
+        };
+
+    })
+
+    callback(keywords);
+
 }

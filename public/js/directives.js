@@ -9,41 +9,33 @@
 app.directive('streamViz', function () {
 
     return {
-        restrict: 'E',
-        terminal: true,
-        scope: {
-          val: '='
-        },
+        
         link: function (scope, element, attrs) {
-            // console.log(scope.$parent.data);
+            
+            console.log(scope);
 
             createSVG(scope, element);
 
-            initGraph(scope, function(chart) {
-                
-                scope.$apply(function () {
-                    scope.chart = chart;
-                    // scope.colors = chart.colors
-                    // scope.$parent.updateBtns();
-                    console.log(scope);
-                });
+            scope.$watch('streamData', function(newVal, oldVal) {
 
-                // console.log(chart.stacked)
-                // scope.$watch('val', updateGraph, true);
-                // console.log( scope.chart.legend.width(10) );
-                // scope.chart.legend.width(10) ;
-            });
-            
-            // console.log(scope);
+                // console.log(newVal);
 
-            setInterval(function () {
-                // console.log(scope.$parent.data)
-                if (scope.$parent.streaming) updateGraph(scope.$parent.data, scope);
-                // if(scope.streaming == true) {
-                    // return updateGraph(scope.val, scope);
-                // }
+                if(newVal && newVal.length && scope.chart) {
 
-            }, 1000)
+                        console.log(newVal);
+                        redrawStreamGraph(newVal, scope, function (chart) {
+                            scope.chart = chart;
+                        })
+
+                    } else if(newVal && newVal.length) { // fist time loaded
+
+                        initStreamGraph(newVal, scope.colors, function (chart) {
+                            scope.chart = chart;
+                        });
+
+                    } 
+
+            }, true);
 
         }
     }
@@ -63,26 +55,11 @@ function createSVG(scope, element){
 
 }
 
-function initGraph(scope, callback) {
-
-    // constants
-    var colors = scope.$parent.colors;
-
-    // scope
-
-    // body...
-    var colorsTmp = [];
+function initStreamGraph(newVal, colors, callback) {
 
     keyColor = function(d, i) {
-        // scope.$parent.colors.push(colors(i));
-        // console.log(colors(i));
-        colorsTmp.push(colors(i))
         return colors(i);
     };
-
-    scope.colors = colorsTmp;
-    // console.log(colors())
-    // console.log (scope.$parent.colors);
 
     nv.addGraph(function() {
 
@@ -101,8 +78,8 @@ function initGraph(scope, callback) {
         // chart.yAxis
         //     .tickFormat(d3.format(',.2f'));
 
-        scope.svg
-              .datum( scope.val )
+         d3.select("#stream-viz")
+              .datum( newVal )
                 .transition().duration(500).call(chart);
 
         nv.utils.windowResize(chart.update);
@@ -125,7 +102,7 @@ function initGraph(scope, callback) {
 
 }
 
-function updateGraph (val, scope) {
+function redrawStreamGraph (newVal, scope) {
 
     console.log("graph updated");
     // console.log(scope)
@@ -135,7 +112,7 @@ function updateGraph (val, scope) {
     // console.log(newVal, oldVal);
 
     scope.svg
-      .datum( val )
+      .datum( newVal )
         .transition().duration(500).call(scope.chart);
 
     nv.utils.windowResize(scope.chart.update);
@@ -184,7 +161,7 @@ app.directive('vennCompare', function( ){
 
 function initVenn (newVal, callback) {
     
-    console.log("init venn diagram " + newVal)
+    // console.log("init venn diagram " + newVal)
 
     var B=newVal[0], A=newVal[1];
     
