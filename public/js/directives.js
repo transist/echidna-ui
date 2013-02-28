@@ -18,7 +18,7 @@ app.directive('streamViz', function () {
 
             scope.$watch('streamData', function(newVal, oldVal) {
 
-                // console.log(newVal);
+                console.log(newVal);
 
                 if(newVal && newVal.length && scope.chart) {
 

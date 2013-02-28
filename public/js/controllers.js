@@ -70,7 +70,7 @@ app.controller('MainCtrl', function($scope, $http) {
 
 });
 
-app.controller('StreamCtrl', function($scope, $http, apiClient) {
+app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient) {
 
     /* VARIABLES --------------------------------------------------------------
         */
@@ -93,8 +93,12 @@ app.controller('StreamCtrl', function($scope, $http, apiClient) {
 
         apiClient.stream.then(function(data){
 
-            $scope.streamData= apiClient.streamData;
-            // console.log("blabla")
+
+            setInterval(function(){
+
+                $scope.streamData = apiClient.streamData;
+                
+            }, 1000)
 
         }, function(error) {
             

@@ -87,6 +87,8 @@ function ApiClient($timeout) {
             // loop and get the next slice
             apiClient.stream = $timeout(apiClient.nextSlice, apiClient.nInterval);
 
+            // console.log(apiClient.streamData)
+
             // wrapper for API request
             newSlice();
         }
@@ -122,23 +124,49 @@ function ApiClient($timeout) {
         
         var streamTmp = [];
         // console.log(slice[0]);
-        var newValue = 0; 
+        var diff = 0; 
 
-        if(apiClient.numberItems != apiClient.streamData.length ) newValue = apiClient.streamData.length - apiClient.numberItems 
+        if(apiClient.numberItems != apiClient.streamData.length ) diff = apiClient.numberItems - apiClient.streamData.length;
+
+        // console.log("required Items : "+ apiClient.numberItems, "difference : " +diff);
 
         for (var i = 0; i < slice[0].length; i++) {
 
             var keywordTmp = {};
 
-            keywordTmp = apiClient.streamData[i]; 
+
+            if(i < apiClient.streamData.length){
+
+                keywordTmp = apiClient.streamData[i];
+                
+                // move all values up (see function Array.move below)
+                keywordTmp.values.move(keywordTmp.values.length, 0);
+    
+                // remove oldest value
+                keywordTmp.values.pop();
+
+                // console.log(keywordTmp)
             
-            // console.log(i, keywordTmp.values[0]);
+            } else if (diff > 0  && i > apiClient.streamData.length-1) {
 
-            // move all values up (see function Array.move below)
-            keywordTmp.values.move(keywordTmp.values.length, 0);
+                // required items has been increased
+                
+                keywordTmp.key = slice[0][i].keyword;
+                
+                console.log("Added Item")
 
-            // remove oldest value
-            keywordTmp.values.pop();
+                keywordTmp.values = []
+                for (var j = 0; j < apiClient.streamLength; j++) {
+                    
+                    keywordTmp.values.push([0 , new Date()-j*1000]) //populate with 0 values
+                    
+                };
+
+                // console.log(keywordTmp)
+                // console.log(i, slice[0])
+
+            }
+
 
             // add last value to keyword
             keywordTmp.values[0] = [ slice[0][i].count, slice[0][i].sliceid ];
@@ -146,11 +174,12 @@ function ApiClient($timeout) {
             streamTmp.push(keywordTmp);
 
         };
+        // console.log(streamTmp)
+        callback(streamTmp)
 
-        callback(streamTmp);
+        // apiClient.streamData = streamTmp;
 
     }
-
     
     // fake IO
     function newSlice() {
@@ -164,6 +193,7 @@ function ApiClient($timeout) {
             addSliceToStream(slice, function(streamData) {
                 // console.log(streamData)
                 apiClient.streamData =  streamData;
+
             });
 
             // console.log(slice);
