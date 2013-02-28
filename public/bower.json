@@ -1,0 +1,20 @@
+{
+  "name": "echidna",
+  "version": "0.0.1",
+  "main": "./css/main.css",
+  "dependencies": {
+
+    "jquery"            :   "~1.7.2",
+    "jquery-ui"            :   "",
+    "bootstrap"         :   "",
+    "angular"           :   "",
+    "angular-resources" :   "",
+    "angular-ui"           :   "",
+    
+    "d3"                :   "~2",
+    "bootstrap-css"         :   "",
+
+
+
+  }
+}
