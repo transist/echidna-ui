@@ -72,11 +72,11 @@ function initStreamGraph(newVal, colors, callback) {
                       // .attr("id", function(d) { return d[1] })
                       // .clipEdge(true);
         // // console.log(scope.chart);
-        // chart.xAxis
-        //     .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+        chart.xAxis
+            .tickFormat(function(d) { return d3.time.format('%X')(new Date(d)) });
 
-        // chart.yAxis
-        //     .tickFormat(d3.format(',.2f'));
+        chart.yAxis
+            .tickFormat(d3.format(''));
 
          d3.select("#stream-viz")
               .datum( newVal )
