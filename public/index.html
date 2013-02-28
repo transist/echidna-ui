@@ -29,10 +29,16 @@
               <span class="icon-bar"></span>
             </a>
 
-            <a href="#" class="brand">{{appName}}</a>
+            <a href="#" class="brand">{{"App Name" | i18n}}</a>
 
             <div class="nav-collapse collapse pull-right">
               <ul class="nav">
+                <li>
+                  <p>
+                    <a href="#" ng-click="setLocale('zh-cn')">中文</a>
+                     | 
+                    <a href="#" ng-click="setLocale('en-us')">English</a>
+                </li>
                 <li class="active"><a href="">Home</a></li>
                 <li>
                   <a href="">
@@ -98,7 +104,9 @@
 <!-- LOCAL -->
 
 <script src="lib/angular/angular-dragdrop.min.js"></script>
+<script src="lib/angular/angular.i18n.js"></script>
 <script src="lib/angularstrap.min.js"></script>
+
 
 <!-- stream 
 <script src="lib/nvd3/src/utils.js"></script>
@@ -125,5 +133,6 @@
 <script src="js/services.js"></script>
 <script src="js/directives.js"></script>
 <script src="js/controllers.js"></script>
+<script src="js/locales.js"></script>
 
 </html>

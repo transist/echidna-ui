@@ -1,20 +1,35 @@
 // controllers.js
 
-app.controller('MainCtrl', function($scope, $http) {
+app.controller('MainCtrl', function($scope, $locale, $filter, $http) {
         
     /* VARIABLES --------------------------------------------------------------
         */
         $scope.name = 'Your brand';
 
-        $scope.appName = "Keywords & Trends generator"
+        // $scope.appName = "Keywords & Trends generator"
 
-   
+    
         $scope.keywords = []; // array to store keywords text
         $scope.colors = []; // global array to store keywords color
 
         $scope.list = [ {'key':'drag me'}];
 
         $scope.modal = {content: 'Hello Modal', saved: false};
+
+        // Locale & i18n
+
+        // default to english
+        // setLocale('en-us');
+        console.log($locale)
+
+        // Trick here : 
+        $scope.locale = $filter('i18n')('Language: %1', $locale.id);
+
+        $scope.setLocale = function(l) {
+            $locale.id = l;
+            // $scope.jsString = $filter('i18n')('Строка в js');
+            $scope.locale = $filter('i18n')('Language: %1', $locale.id);
+        }
         
         // $scope.apiClient = apiClient;
 
