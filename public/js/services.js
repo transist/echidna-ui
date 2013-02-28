@@ -14,7 +14,7 @@ function ApiClient($timeout) {
     // Default values 
     apiClient.nInterval = 1000; // time interval for timeout in ms
 
-    apiClient.streaming = false; // Streaming API is initially stopped
+    apiClient.streaming = true; // Streaming API is initially stopped
     
     apiClient.filter = {        
 
@@ -49,6 +49,7 @@ function ApiClient($timeout) {
         console.log("Event : initStreamData");
 
         // function to fake data available at ../data/streamdata.js
+        
         fakeInitStream(apiClient.numberItems, apiClient.streamLength, function(data){ 
             
             // console.log(data)
@@ -56,19 +57,22 @@ function ApiClient($timeout) {
         
         });
         
-        apiClient.startStream(); // init streaming process & timeout
 
-        apiClient.streaming = false; // "_streaming"  stop the stream by default
+        // apiClient.startStream()
+
+        // apiClient.streaming = false; // "_streaming"  stop the stream by default
+        apiClient.nextSlice();
         
     }
 
     apiClient.startStream = function () {
 
         console.log("Event : startStream")
-        apiClient.streaming = true;    
         
+        apiClient.streaming = true;
         apiClient.nextSlice();
-        
+        // apiClient.streaming = false;
+
         // this.getSlice
         // this.stream;
         // return true;
@@ -80,11 +84,11 @@ function ApiClient($timeout) {
 
         if (apiClient.streaming) {
 
-            // wrapper for API request
-            newSlice();
-
             // loop and get the next slice
             apiClient.stream = $timeout(apiClient.nextSlice, apiClient.nInterval);
+
+            // wrapper for API request
+            newSlice();
         }
 
     }
@@ -93,9 +97,9 @@ function ApiClient($timeout) {
         
         apiClient.streaming = false;
         console.log("Event : stopStream")
+        $timeout.cancel(apiClient.stream);
 
     }
-    
 
     apiClient.feedConfig = function(_numberItems, _gender, _age, _tier, _city, callback) {
 
@@ -117,8 +121,10 @@ function ApiClient($timeout) {
     function addSliceToStream(slice, callback) {
         
         var streamTmp = [];
-
         // console.log(slice[0]);
+        var newValue = 0; 
+
+        if(apiClient.numberItems != apiClient.streamData.length ) newValue = apiClient.streamData.length - apiClient.numberItems 
 
         for (var i = 0; i < slice[0].length; i++) {
 
@@ -152,7 +158,8 @@ function ApiClient($timeout) {
         // goes  
         console.log("Event : newSlice")
 
-        generateSlice( apiClient.numberItems, 1,function(slice){ // function to fake in ../data/streamdata.js
+
+        generateSlice( apiClient.numberItems, 1, false, function(slice){ // function to fake in ../data/streamdata.js
             
             addSliceToStream(slice, function(streamData) {
                 // console.log(streamData)

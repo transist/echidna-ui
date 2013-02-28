@@ -22,7 +22,7 @@ app.directive('streamViz', function () {
 
                 if(newVal && newVal.length && scope.chart) {
 
-                        console.log(newVal);
+                        // console.log(newVal);
                         redrawStreamGraph(newVal, scope, function (chart) {
                             scope.chart = chart;
                         })
@@ -104,7 +104,7 @@ function initStreamGraph(newVal, colors, callback) {
 
 function redrawStreamGraph (newVal, scope) {
 
-    console.log("graph updated");
+    // console.log("graph updated");
     // console.log(scope)
     // chart.stacked.scatter.clipVoronoi(false);
     

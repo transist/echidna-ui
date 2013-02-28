@@ -80,7 +80,7 @@ app.controller('StreamCtrl', function($scope, $http, apiClient) {
         $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
         
         $scope.colors = d3.scale.category20(); // define d3 color scheme    
-        $scope.streaming = false;  // to start/stop streaming
+        $scope.streaming = apiClient.streaming;  // to start/stop streaming
 
         // console.log($scope)
 
@@ -235,6 +235,7 @@ app.controller('StreamCtrl', function($scope, $http, apiClient) {
 
         // switch for stream style
         $scope.switchStream = function switchStream (type) {
+            
             console.log(type)
             var style  = { style : type}
 
@@ -255,6 +256,7 @@ app.controller('StreamCtrl', function($scope, $http, apiClient) {
             else apiClient.stopStream()
             
             // console.log(apiClient.streaming);
+            $scope.streaming = apiClient.streaming
             
             return apiClient.streaming;
         }
@@ -262,15 +264,15 @@ app.controller('StreamCtrl', function($scope, $http, apiClient) {
         // set number of keywords
         $scope.setStreamSize = function setStreamSize (size) {
 
-            $scope.streamSize = size;
+            apiClient.numberItems = size;
             // console.log("$scope.streamSize : "+$scope.streamSize);
 
         }
             
         // set time granularity
         $scope.setStreamLength = function setStreamLength (size) {
-            $scope.streamLength = size;
-            console.log("$scope.streamLength : "+$scope.streamLength);
+            apiClient.streamLength = size;
+            // console.log("$scope.streamLength : "+$scope.streamLength);
 
         } 
 
