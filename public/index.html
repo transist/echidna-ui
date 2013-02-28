@@ -39,19 +39,20 @@
                      | 
                     <a href="#" ng-click="setLocale('en-us')">English</a>
                 </li>
-                <li class="active"><a href="">Home</a></li>
+                <li class="active"><a href="">{{ "menu home" | i18n }}</a></li>
                 <li>
                   <a href="">
-                    Clients
+                    {{"menu clients"| i18n}}
                   </a>
                 </li>
                 <li>
                   <a href="">
-                    Filter presets
+                    {{"menu filter"| i18n}}
+                    
                   </a>
                 </li>
-                <li><a href="">Account</a></li>
-                <li><a href="">Logout</a></li>
+                <li><a href="">{{"menu account" | i18n}}</a></li>
+                <li><a href="">{{"menu logout" | i18n}}</a></li>
               </ul>
             </div>
         </div>
