@@ -17,19 +17,18 @@ var _locales = {
 
             // etc.
 
-
         },
 
         'zh-cn': {
 
-            "app name" : "美丽的关联次",
+            "app name" : "美丽的关联词",
 
             // Top menu
             "menu home"     : "首页",
-            "menu clients"  : "",
-            "menu filters"      : "Filter Presets",
-            "menu account"      : "Account",
-            "menu logout"       : "Logout",
+            "menu clients"  : "客户",
+            "menu filters"      : "图片过滤设置",
+            "menu account"      : "账户",
+            "menu logout"       : "退出",
 
 
             // Filters

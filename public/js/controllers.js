@@ -9,10 +9,11 @@ app.controller('MainCtrl', function($scope, $locale, $filter, $http) {
         // $scope.appName = "Keywords & Trends generator"
 
     
-        $scope.keywords = []; // array to store keywords text
-        $scope.colors = []; // global array to store keywords color
+        $scope.keywords = []; // array to store only keywords text
 
-        $scope.list = [ {'key':'drag me'}];
+        $scope.colors = [];   // global array to store keywords color
+
+        $scope.list = [];
 
         $scope.modal = {content: 'Hello Modal', saved: false};
 
@@ -20,7 +21,7 @@ app.controller('MainCtrl', function($scope, $locale, $filter, $http) {
 
         // default to english
         // setLocale('en-us');
-        console.log($locale)
+        console.log($scope)
 
         // Trick here : 
         $scope.locale = $filter('i18n')('Language: %1', $locale.id);
@@ -141,18 +142,28 @@ app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient) {
     /* API & DATA --------------------------------------------------------------
         */
 
-        console.log(apiClient)
+
+        console.log($scope)
 
         apiClient.initStream();
 
         apiClient.stream.then(function(data){
 
+            var myKws;
 
             setInterval(function(){
 
                 $scope.streamData = apiClient.streamData;
 
-                console.log(apiClient);
+                updateKeywordList(apiClient.streamData, $scope.$parent.list, function(kws) {
+                    
+                    // remove already selected items
+                    // myKws = kws.diff($scope.$parent.list);
+                    $scope.$parent.keywords = kws;
+
+                });
+
+                // console.log(apiClient);
                 
             }, 1000)
 
@@ -164,42 +175,6 @@ app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient) {
 
         /* OLD FUNCTIONS ----------------------------------------------------------------
         */
-
-        /*
-        $scope.data= []; // array to store all values
-        
-        // init with first values
-        parseStream( $scope.streamSize, $scope.streamLength, function( initData ) {
-
-            $scope.data=initData;
-        } )
-
-        // update global keyword list
-        updateKeywordList($scope.data, function (list) {
-
-            $scope.$parent.keywords = list;
-
-        })
-        
-        // console.log($scope)
-
-
-        // Let's stream some randomness
-        setInterval(function(){ // tick every second with fake data
-
-            parseStream( $scope.streamSize, $scope.streamLength, function( data ) {
-
-                $scope.data=data;
-                
-                // update global scope keyword list
-                updateKeywordList($scope.data, function (list) {
-                    $scope.$parent.keywords = list;
-                })
-
-        } )
-
-        },1000);
-    */
 
     /* KEYWORDS BUTTONS ----------------------------------------------------------------
         */
@@ -384,28 +359,34 @@ function addPoint (newPoint, streamData, callback) {
 
 }
 
-function updateKeywordList(data, callback) {
+function updateKeywordList(data, list, callback) {
     
-    var list = [];
+    
+    var keywords = [];
+    var existing = false;
 
     for (var i = 0; i < data.length; i++) {
         
-        var kw = {};
-        kw.state = "enabled"
-        kw.key = data[i].key;
+        for (var j = list.length - 1; j >= 0; j--) {
+            
+            if(list[j].key == data[i].key ) existing = true;
 
-        // console.log(i)
-        // console.log(colors(i));
-        // console.log(nv.utils.defaultColor());
-        // console.log($scope);
-        // kw.color = colors(i) ;
+        };
         
-        list.push(kw);
-        // list.push(data[i].key);
+        if(!existing){
+
+            var kw = {};
+            kw.state = "enabled"
+            kw.key = data[i].key;
+            
+            keywords.push(kw);
+
+        }
+        
 
     };
 
-    callback(list);
+    callback(keywords);
 
 }
 
@@ -463,3 +444,9 @@ function listToArray(list) {
     return tmp;
 
 }
+
+Array.prototype.diff = function(a) {
+
+    return this.filter(function(i) {return !(a.indexOf(i) > -1);});
+
+};

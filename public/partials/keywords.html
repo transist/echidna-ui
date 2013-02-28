@@ -8,10 +8,10 @@
   
     <div 
       class="btn keyword-item keyword-{{$index}} {{item.key}} {{item.state}} btn-draggable" 
-      ng-repeat="item in streamData" 
+      ng-repeat="item in keywords" 
       data-drag="true" 
       data-jqyoui-options="{revert: 'invalid'}"  
-      jqyoui-draggable="{index: {{$index}}, animate:true}"
+      jqyoui-draggable="{index: {{$index}}}"
       ng-model="keywords"
       data-placement="top"
       data-unique="1"
