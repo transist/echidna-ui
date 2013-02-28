@@ -149,7 +149,7 @@ function ApiClient($timeout) {
             
             } else if (diff > 0  && i > apiClient.streamData.length-1) {
 
-                // required items has been increased
+                // user has required more items
                 
                 keywordTmp.key = slice[0][i].keyword;
                 
