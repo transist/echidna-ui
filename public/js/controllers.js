@@ -34,18 +34,6 @@ app.controller('MainCtrl', function($scope, $locale, $filter, $http) {
         // $scope.apiClient = apiClient;
 
 
-    /* FILTERING --------------------------------------------------------------
-
-        */
-
-        // Init Stream
-        /* feedConfig( "Both", "All", "All", null, function(filter) {
-            
-            $scope.activeFilter = filter;
-        
-        })
-        */
-
     /* METHODS --------------------------------------------------------------
         */
 
@@ -85,6 +73,57 @@ app.controller('MainCtrl', function($scope, $locale, $filter, $http) {
 
 });
 
+app.controller('FilterCtrl', function($scope, apiClient) {
+
+    /* FILTERING --------------------------------------------------------------
+
+        */
+        
+        // Default values
+        console.log($scope);
+
+        $scope.filter = {};
+        
+        $scope.filter.age = "All";
+        $scope.filter.gender = "Both";
+        $scope.filter.tier = "All";
+
+
+        $scope.setAge = function(age) {
+
+            // console.log("age : "+age);
+            $scope.filter.age = age;
+
+        }
+
+        $scope.setGender = function(gender) {
+
+            // console.log("gender : "+gender);
+            $scope.filter.gender = gender
+
+        }
+
+        $scope.setTier = function(tier) {
+
+            // console.log("tier : "+tier);
+            $scope.filter.tier = tier;
+
+        }
+
+        $scope.$watch('filter', function (filter) {
+            
+            apiClient.filter.gender = filter.gender;
+            apiClient.filter.age = filter.age;
+            apiClient.filter.tier = filter.tier;
+
+            console.log(apiClient.filter);
+
+        }, true)
+
+        // {true:'active', false:''}[""==filter.tier]
+
+})
+
 app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient) {
 
     /* VARIABLES --------------------------------------------------------------
@@ -112,6 +151,8 @@ app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient) {
             setInterval(function(){
 
                 $scope.streamData = apiClient.streamData;
+
+                console.log(apiClient);
                 
             }, 1000)
 
