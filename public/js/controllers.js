@@ -94,7 +94,7 @@ app.controller('StreamCtrl', function($scope, $http, apiClient) {
         apiClient.stream.then(function(data){
 
             $scope.streamData= apiClient.streamData;
-            console.log("blabla")
+            // console.log("blabla")
 
         }, function(error) {
             

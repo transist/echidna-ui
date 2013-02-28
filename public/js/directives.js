@@ -12,7 +12,7 @@ app.directive('streamViz', function () {
         
         link: function (scope, element, attrs) {
             
-            console.log(scope);
+            // console.log(scope);
 
             createSVG(scope, element);
 

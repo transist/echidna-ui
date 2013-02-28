@@ -12,25 +12,27 @@ function ApiClient($timeout) {
     var apiClient=this;
     
     // Default values 
-    apiClient.nInterval = 1000;
-    apiClient.streaming = false;
+    apiClient.nInterval = 1000; // time interval for timeout in ms
+
+    apiClient.streaming = false; // Streaming API is initially stopped
     
-    apiClient.filter = {        // Default values 
+    apiClient.filter = {        
 
         gender  : "Both",       // "Both", "Men", "Women"                        
         age     : "All",        // "All", "18-", "24-", "35-", "40+"              
         tier    : "All",        // "All", "Tier1", "Tier2", "Tier3"               
-        city    : null         // "pinyin" (pinyin formatted name of a city)  Optional*/
+        city    : null          // "pinyin" (pinyin formatted name of a city)  Optional*/
 
     }
 
-    apiClient.numberItems = 5;
-    apiClient.streamLength = 30;
+    apiClient.numberItems = 5;      // number of keywords
 
-    apiClient.streamData = [];
+    apiClient.streamLength = 30;    // number of values needed
+
+    apiClient.streamData = [];      // Array to store all streming data 
 
 
-    apiClient.initStream = function (_gender, _age, _tier, _city, _streaming) {
+    apiClient.initStream = function (_numberItems, _gender, _age, _tier, _city, _streamLength) {
 
         console.log("Event : initStream")
 
@@ -65,8 +67,9 @@ function ApiClient($timeout) {
         console.log("Event : startStream")
         apiClient.streaming = true;    
         
-        // this.getSlice
         apiClient.nextSlice();
+        
+        // this.getSlice
         // this.stream;
         // return true;
         // $timeout(getSlice, this.nInterval);
@@ -78,7 +81,7 @@ function ApiClient($timeout) {
         if (apiClient.streaming) {
 
             // wrapper for API request
-            apiClient.newSlice( apiClient.filter, apiClient.numberItems, apiClient.streamLength );
+            newSlice();
 
             // loop and get the next slice
             apiClient.stream = $timeout(apiClient.nextSlice, apiClient.nInterval);
@@ -93,40 +96,23 @@ function ApiClient($timeout) {
 
     }
     
-    apiClient.newSlice = function(_filter, _numberItems, _streamLength, callback) {
-        
-        // goes  
-        console.log("Event : newSlice")
 
-        generateSlice(5,1,function(slice){ // function to fake in ../data/streamdata.js
-            
-            addSliceToStream(slice, function(streamData) {
-                // console.log(streamData)
-                apiClient.streamData =  streamData;
-            });
+    apiClient.feedConfig = function(_numberItems, _gender, _age, _tier, _city, callback) {
 
-            // console.log(slice);
-        })
+        // Filtering by group
+        apiClient.filter.gender  = _gender;   // "Both", "Men", "Women"                        
+        apiClient.filter.age     = _age;      // "All", "18-", "24-", "35-", "40+"              
+        apiClient.filter.tier    = _tier;     // "All", "Tier1", "Tier2", "Tier3"               
+        apiClient.filter.city    = _city;     // "pinyin" (pinyin formatted name of a city)  Optional
 
-    }
+        apiClient.numberItems = _numberItems;       // Total number of keywords needed
 
-    apiClient.feedConfig = function(_gender, _age, _tier, _city, callback) {
-
-        var filter = {};
-
-        filter.gender  = _gender; 
-        filter.age     = _age;   
-        filter.tier    = _tier;  
-        filter.city    = _city;  
-
-        apiClient.filter= filter;
+        console.log("Client : updateConfig")
 
         callback(filter);
-        console.log("Event : updateConfig")
 
     }
     
-
     // private functions 
     function addSliceToStream(slice, callback) {
         
@@ -156,6 +142,25 @@ function ApiClient($timeout) {
         };
 
         callback(streamTmp);
+
+    }
+
+    
+    // fake IO
+    function newSlice() {
+        
+        // goes  
+        console.log("Event : newSlice")
+
+        generateSlice( apiClient.numberItems, 1,function(slice){ // function to fake in ../data/streamdata.js
+            
+            addSliceToStream(slice, function(streamData) {
+                // console.log(streamData)
+                apiClient.streamData =  streamData;
+            });
+
+            // console.log(slice);
+        })
 
     }
     
