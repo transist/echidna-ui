@@ -361,7 +361,8 @@ function addPoint (newPoint, streamData, callback) {
 
 function updateKeywordList(data, list, callback) {
     
-    
+    // console.log(data.length)
+
     var keywords = [];
     var existing = false;
 
@@ -372,9 +373,11 @@ function updateKeywordList(data, list, callback) {
             if(list[j].key == data[i].key ) existing = true;
 
         };
-        
-        if(!existing){
 
+
+        
+        if(!existing) {
+            console.log(data[i])
             var kw = {};
             kw.state = "enabled"
             kw.key = data[i].key;
