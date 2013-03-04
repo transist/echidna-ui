@@ -1,29 +1,24 @@
 // controllers.js
 
-app.controller('MainCtrl', function($scope, $locale, $filter, $http) {
+app.controller('MainCtrl', function($scope, $locale, $filter, $http, apiClient) {
         
     /* VARIABLES --------------------------------------------------------------
         */
         $scope.name = 'Your brand';
 
         // $scope.appName = "Keywords & Trends generator"
-
-    
-        $scope.keywords = []; // array to store only keywords text
+        // $scope.keywords = []; // array to store only keywords text
 
         $scope.colors = [];   // global array to store keywords color
+        $scope.list = [];     // global array to store all 
 
-        $scope.list = [];
+        $scope.keywords = apiClient.streamData;
+
+        console.log($scope);
 
         $scope.modal = {content: 'Hello Modal', saved: false};
 
         // Locale & i18n
-
-        // default to english
-        // setLocale('en-us');
-        console.log($scope)
-
-        // Trick here : 
         $scope.locale = $filter('i18n')('Language: %1', $locale.id);
 
         $scope.setLocale = function(l) {
@@ -31,150 +26,131 @@ app.controller('MainCtrl', function($scope, $locale, $filter, $http) {
             // $scope.jsString = $filter('i18n')('Строка в js');
             $scope.locale = $filter('i18n')('Language: %1', $locale.id);
         }
-        
-        // $scope.apiClient = apiClient;
 
 
-    /* METHODS --------------------------------------------------------------
+    /* SAVE METHODS --------------------------------------------------------------
         */
 
         $scope.saveToCsv = saveToCsv;
         $scope.copyToClipboard = copyToClipboard;
 
-    /* DRAG'N DROP --------------------------------------------------------------
-        */    
-        // console.log($scope.keywords.length);
-        // Drag 'n drop callbacks
-            $scope.startCallback = function(event, ui) {
-                console.log('You started draggin');
-            };
-
-            $scope.stopCallback = function(event, ui) {
-              console.log('Why did you stop draggin me?');
-            };
-
-            $scope.dragCallback = function(event, ui) {
-              console.log('hey, look I`m flying');
-            };
-
-            $scope.dropCallback = function(event, ui) {
-              console.log('hey, you dumped me :-(');
-            };
-
-            $scope.overCallback = function(event, ui) {
-              console.log('Look, I`m over you');
-            };
-
-            $scope.outCallback = function(event, ui) {
-              console.log('I`m not, hehe');
-            };
-
-    /* MOUSE ACTIONS -------------------------------------------------
-        */
-
 });
 
-app.controller('FilterCtrl', function($scope, apiClient) {
+app.controller('FilterCtrl', function($scope, apiClient, socket) {
 
-    /* FILTERING --------------------------------------------------------------
-
-        */
-        
-        // Default values
-        console.log($scope);
-
-        $scope.filter = {};
-        
-        $scope.filter.age = "All";
-        $scope.filter.gender = "Both";
-        $scope.filter.tier = "All";
+    // Default values
+    console.log($scope);
+    
+    // var myFeedConfig = apiClient.feedConfig;
+    $scope.filter = apiClient.feedConfig;
+    $scope.filter.age = "All";
+    $scope.filter.gender = "Both";
+    $scope.filter.tier = "All";
+    
 
 
-        $scope.setAge = function(age) {
+    $scope.setAge = function(age) {
 
-            // console.log("age : "+age);
-            $scope.filter.age = age;
+        // console.log("age : "+age);
+        $scope.filter.age = age;
+        apiClient.feedConfig.age = age;
 
-        }
+    }
 
-        $scope.setGender = function(gender) {
+    $scope.setGender = function(gender) {
 
-            // console.log("gender : "+gender);
-            $scope.filter.gender = gender
+        // console.log("gender : "+gender);
+        $scope.filter.gender = gender
+        apiClient.feedConfig.gender = gender
 
-        }
+    }
 
-        $scope.setTier = function(tier) {
+    $scope.setTier = function(tier) {
 
-            // console.log("tier : "+tier);
-            $scope.filter.tier = tier;
+        // console.log("tier : "+tier);
+        $scope.filter.tier = tier;
+        apiClient.feedConfig.tier = tier;
+        // console.log(apiClient)
 
-        }
+    }
 
-        $scope.$watch('filter', function (filter) {
-            
-            apiClient.filter.gender = filter.gender;
-            apiClient.filter.age = filter.age;
-            apiClient.filter.tier = filter.tier;
+    $scope.$watch('filter', function (newVal) {
+        console.log(apiClient.feedConfig)
+        socket.emit('client:feedConfig', apiClient.feedConfig)
 
-            console.log(apiClient.filter);
-
-        }, true)
-
-        // {true:'active', false:''}[""==filter.tier]
+    }, true)
 
 })
 
-app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient) {
+app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient, socket) {
 
     /* VARIABLES --------------------------------------------------------------
         */
         // some global variables
         
-        $scope.streamSize = 5; // default number of keywords (y values)
-        $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
+        // $scope.streamSize = 5; // default number of keywords (y values)
+        // $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
         
         $scope.colors = d3.scale.category20(); // define d3 color scheme    
-        $scope.streaming = apiClient.streaming;  // to start/stop streaming
 
-        // console.log($scope)
+        // stream data
+        $scope.streamData = []; // init data
+        $scope.initData = false; // init data
 
-    /* API & DATA --------------------------------------------------------------
+
+    /* SOCKET API & DATA --------------------------------------------------------------
         */
-
-
-        console.log($scope)
-
-        apiClient.initStream();
-
-        apiClient.stream.then(function(data){
-
-            var myKws;
-
-            setInterval(function(){
-
-                $scope.streamData = apiClient.streamData;
-
-                updateKeywordList(apiClient.streamData, $scope.$parent.list, function(kws) {
-                    
-                    // remove already selected items
-                    // myKws = kws.diff($scope.$parent.list);
-                    $scope.$parent.keywords = kws;
-
-                });
-
-                // console.log(apiClient);
                 
-            }, 1000)
+        // send init values
+        socket.emit('client:feed:init', apiClient.filter);
 
-        }, function(error) {
+        // receive init values
+        socket.on('send:feed:init', function (data) {
+
+            console.log('send:init');
+            console.log(data);
+
+            $scope.initData = true;
+
+            // create stream graph
+            // $scope.streamGraph.init(data.initdata);
             
-            // handle error
+            $scope.streamGraph.init(data.initdata, $scope.colors, function (chart) {
+                $scope.chart = chart;
+            });
 
-        })
+            $scope.streamData = data.initdata;
 
-        /* OLD FUNCTIONS ----------------------------------------------------------------
-        */
+        });
+
+        // receive new slice of data
+        socket.on('send:datapoint', function (data) {
+
+            // console.log('send:feed:point');
+            // console.log(data);
+
+            addSliceToStream($scope.streamData, $scope.streamSize, data.datapoint, function(stream) {
+                // console.log(streamData)
+                $scope.streamData =  stream;
+                
+                
+                /*
+                updateKeywordList(stream, $scope.$parent.list, function(kws) {
+
+                    $scope.$parent.keywords = kws;
+                
+                });
+*/
+                
+                
+
+            });
+
+        });
+
+        
+        //
+
 
     /* KEYWORDS BUTTONS ----------------------------------------------------------------
         */
@@ -276,8 +252,8 @@ app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient) {
 
             // var chart = $scope.$$childHead.chart;
             $scope.$$childHead.chart.style(type)
-            console.log($scope.$$childHead.chart.state())
 
+            // console.log($scope.$$childHead.chart.state())
 
             var svg = d3.select("#stream-viz")
             $scope.$$childHead.chart(svg)
@@ -285,51 +261,87 @@ app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient) {
 
         // play/stop button
         $scope.startStopStream = function startStopStream () {
-            apiClient.streaming = (apiClient.streaming) ? false : true;
+
+            console.log($scope.streamGraph)
+
+            $scope.streamGraph.streaming = ($scope.streamGraph.streaming) ? false : true;
             
-            if(apiClient.streaming) apiClient.startStream()
-            else apiClient.stopStream()
+            if($scope.streamGraph.streaming) $scope.streamGraph.startStream()
+            else $scope.streamGraph.stopStream()
             
-            // console.log(apiClient.streaming);
-            $scope.streaming = apiClient.streaming
-            
-            return apiClient.streaming;
+            return $scope.streamGraph.streaming;
         }
+
+        
+        // Values for Display
+        $scope.samples = 5;
+        $scope.sampling = 0;
+        $scope.samplings = [
+                "second",
+                "minute",
+                "hour",
+                "day",
+                "month",
+                "year"
+        ];
+
+        $scope.timerange = [
+                "today",
+                "yesterday",
+                "this week",
+                "2 weeks before",
+                "month",
+                "year"
+        ];
+
+        $scope.startdate = Date.now();
+        $scope.enddate = Date.now() - 360000;
+
+        // tmp var to be watched within scope 
+        var filter = apiClient.feedConfig;
 
         // set number of keywords
         $scope.setStreamSize = function setStreamSize (size) {
 
-            apiClient.numberItems = size;
+            filter.samples = size;
+            apiClient.samples = size;
             // console.log("$scope.streamSize : "+$scope.streamSize);
 
         }
             
-        // set time granularity
-        $scope.setStreamLength = function setStreamLength (size) {
-            apiClient.streamLength = size;
+        // set time sampling
+        $scope.setSampling = function (sampling) {
+
+            // console.log(sampling)
+            filter.sampling = $scope.samplings[sampling];
+            apiClient.feedConfig.sampling = $scope.samplings[sampling];
+
+
+            return $scope.samplings[sampling];
             // console.log("$scope.streamLength : "+$scope.streamLength);
 
         } 
 
-        // set timeframe
-        $scope.timeframes = [  
-            {"name": "30 s", "value": "30"},  
-            {"name": "1 min", "value": "60"},
-            {"name": "10 min", "value": "600"},
-            {"name": "30 min", "value": "1800"},
-            {"name": "1 h", "value": "3600"},
-            {"name": "2h", "value": "7200"},
-            {"name": "3h", "value": "10800"},
-            {"name": "10h", "value": "36000"},
-            {"name": "1 day", "value": "86400"},
-            {"name": "7 day", "value": "604800"}
-        ]
+        $scope.setTimerange = function (start,end) {
 
-        $scope.setTimerange = function setTimerange(timerange) {
-            console.log(timerange);
-            // do sth...
+            console.log(start, end);
+
+            filter.start = start;
+            apiClient.feedConfig.start = start;
+
+            filter.end = end;
+            apiClient.feedConfig.end = end;
+            
 
         }
+
+        // send update to server
+        $scope.$watch('filter', function (newVal) {
+
+            console.log(apiClient.feedConfig)
+            socket.emit('client:feedConfig', apiClient.feedConfig)
+
+        }, true)
 
 });
 
@@ -344,6 +356,69 @@ app.controller('compareCtrl', function($scope, $http){
 
 
 })
+
+
+ // private functions 
+function addSliceToStream(streamData, numberItems, slice, callback) {
+    
+    var streamTmp = [];
+    // console.log(slice[0]);
+    var diff = 0; 
+
+    if(numberItems != streamData.length ) diff = numberItems - streamData.length;
+
+    // console.log("required Items : "+ apiClient.numberItems, "difference : " +diff);
+
+    for (var i = 0; i < slice[0].length; i++) {
+
+        var keywordTmp = {};
+
+
+        if(i < streamData.length){
+
+            keywordTmp = streamData[i];
+            
+            // move all values up (see function Array.move below)
+            keywordTmp.values.move(keywordTmp.values.length, 0);
+
+            // remove oldest value
+            keywordTmp.values.pop();
+
+            // console.log(keywordTmp)
+        
+        } else if (diff > 0  && i > streamData.length-1) {
+
+            // user has required more items
+            
+            keywordTmp.key = slice[0][i].keyword;
+            
+            console.log("Added Item")
+
+            keywordTmp.values = []
+            for (var j = 0; j < streamLength; j++) {
+                
+                keywordTmp.values.push([0 , new Date()-j*1000]) //populate with 0 values
+                
+            };
+
+            // console.log(keywordTmp)
+            // console.log(i, slice[0])
+
+        }
+
+
+        // add last value to keyword
+        keywordTmp.values[0] = [ slice[0][i].count, slice[0][i].sliceid ];
+
+        streamTmp.push(keywordTmp);
+
+    };
+    // console.log(streamTmp)
+    callback(streamTmp)
+
+    // apiClient.streamData = streamTmp;
+
+}
 
 function addPoint (newPoint, streamData, callback) {
     console.log(streamData[0].values.length)
@@ -368,24 +443,27 @@ function updateKeywordList(data, list, callback) {
 
     for (var i = 0; i < data.length; i++) {
         
+        var kw = {};
+        kw.state = "enabled";
+        kw.drag = true;
+        kw.key = data[i].key;
+
         for (var j = list.length - 1; j >= 0; j--) {
             
             if(list[j].key == data[i].key ) existing = true;
 
         };
 
-
-        
-        if(!existing) {
-            console.log(data[i])
-            var kw = {};
-            kw.state = "enabled"
-            kw.key = data[i].key;
-            
-            keywords.push(kw);
-
+        if(!existing) { // keyword already in the list
+            kw.state =  "enabled";
+            kw.drag  =  "true";
         }
-        
+        else {
+            kw.state = "active";
+            kw.drag  = "false";
+        }
+
+        keywords.push(kw);
 
     };
 
