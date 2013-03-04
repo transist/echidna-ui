@@ -7,17 +7,42 @@
 }
 
 #flow {
-/*    position: relative;
+    position: relative;
     bottom:0;
-    left:0;*/
-    /*width:100%;*/
-    /*background-color: #f5f5f5*/
+    width:100%;
+    height: auto;
 }
 
 #streamUtils {
-    background-color: #efefef
+    border-top:1px solid #444444;
+    height: 45px;
+    background-color: #666666;
+    color:white;
 }
 
+.switch-stream {
+    width:20%;
+
+}
+
+.stream-view-utils {
+    width: 50%;
+    float:left;
+}
+
+.stream-filter-item {
+    float:right;
+    margin-left: 25px
+}
+
+.switch-stream a, .switch-stream a:hover, .switch-stream a:visited {
+    color:white;
+    font:20pt;
+}
+
+#samplings {
+    width:100px;
+}
 .final-list {
     background-color: #f5f5f5;
     height: 100%;

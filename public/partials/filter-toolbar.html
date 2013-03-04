@@ -26,14 +26,14 @@
           
           <button 
             ng-click='setGender("Both")'
-            ng-class="{true:'active btn-inverse', false:''}[filter.gender == 'Both']" 
+            ng-class="{true:'active btn-inverse', false:''}[apiClient.gender == 'Both']" 
             class="btn active btn-inverse"
           >
             {{"filter both" | i18n}}
           </button>
           <button 
             ng-click='setGender("Men")'
-            ng-class="{true:'active btn-inverse', false:''}[filter.gender == 'Men']" 
+            ng-class="{true:'active btn-inverse', false:''}[apiClient.gender == 'Men']" 
             class="btn"
           >
             {{"filter men" | i18n}}
@@ -41,7 +41,7 @@
           <button 
             ng-click='setGender("Women")' 
             class="btn"
-            ng-class="{true:'active btn-inverse', false:''}[filter.gender == 'Women']" 
+            ng-class="{true:'active btn-inverse', false:''}[apiClient.gender == 'Women']" 
           >
             {{"filter women" | i18n}}
           </button>

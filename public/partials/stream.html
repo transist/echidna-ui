@@ -1,29 +1,39 @@
-<div id="streamUtils" class="row-fluid">
-  <div class="offset1">
-    <!-- free space -->
+<div id="streamUtils">
+  
+
+
+  <div class="btn" ng-click="startStopStream()">
+      <i ng-class="{true:'icon-pause', false:'icon-play'}[streamGraph.streaming]"></i>
   </div>
 
-  <div class="span1">    
-    <div class="btn" ng-click="startStopStream()">
-      <i ng-class="{true:'icon-pause', false:'icon-play'}[streaming]"></i>
-    </div>
+  <div class="switch-stream btn-small">
+    <a href="#" ng-click="switchStream('stack')" ng-class="" class="">Stacked</a>
+    <a href="#" ng-click="switchStream('stream')" class="">Stream</a>
+    <a href="#" ng-click="switchStream('expand')" class="">Expanded</a>
   </div>
 
-  <div class="span2 btn-group btn-small">
-    <a href="#" ng-click="switchStream('stack')" ng-class="" class="btn">Stacked</a>
-    <a href="#" ng-click="switchStream('stream')" class="btn">Stream</a>
-    <a href="#" ng-click="switchStream('expand')" class="btn">Expanded</a>
-  </div>
+  <form class="form-inline pull-right stream-view-utils">
+      <div class="stream-filter-item">
+        <label for="stream-items-len">Words (1 to 20):
+          <input id="stream-items-len" type="number" name="stream-items-len" min="1" max="20" value="{{samples}}" ng-model="samples" ng-change="setStreamSize(samples)">
+        </label>
+      </div>
 
-  <form class="form-inline pull-right">
-      <label for="stream-items-len">Qty of keywords  (1 to 20):
-        <input id="stream-items-len" type="number" name="stream-items-len" min="1" max="20" value="{{streamSize}}" ng-model="streamSize" ng-change="setStreamSize(streamSize)">
-      </label>
-      <label for="granularity">Granularity: {{streamLength}} %
-        <input id="granularity" type ="range" min ="10" max="100" step ="10" value ="{streamLength}" ng-model="streamLength" ng-change="setStreamLength(streamLength)"/>
-      </label>
-      <label for="">Timeframe:
-        <input id="timeframe" type ="range" min ="10" max="100" step ="10"/>
-      </label>  
+      <div class="stream-filter-item">
+        <label for="samplings">{{ samplings[sampling] }}
+          <input id="samplings" type ="range" min ="0" max="4" step ="1" value ="{sampling}" ng-model="sampling" ng-change="setSampling(sampling)"/>
+        </label>
+      </div>
+
+      <div id="timerange" class="pull-right stream-filter-item" >
+            <i class="icon-calendar icon-large"></i>
+            <input 
+            date-picker="daterangepicker"
+            value="{{ startdate | date:'yyyy-MM-dd'}} to {{ enddate  | date:'yyyy-MM-dd'}}"
+              >
+            </input>
+            <b class="caret"></b>
+      </div>
+      
   </form>
 </div>
