@@ -5,14 +5,16 @@
   </div>
 
   <div id="keywords-list" class="span9">
+
+    <!-- {{ streamData }} -->
   
     <div 
       class="btn keyword-item keyword-{{$index}} {{item.key}} {{item.state}} btn-draggable" 
-      ng-repeat="item in keywords" 
-      data-drag="true" 
-      data-jqyoui-options="{revert: 'invalid'}"  
-      jqyoui-draggable="{index: {{$index}}}"
-      ng-model="keywords"
+      ng-repeat="item in streamData"
+      data-drag="list"
+      data-jqyoui-options="{ revert: 'invalid' }"  
+      jqyoui-draggable="{ index: {{$index}} }"
+      ng-model="streamData"
       data-placement="top"
       data-unique="1"
       bs-popover="'partials/keyword-tooltip.html'"

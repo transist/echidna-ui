@@ -1,11 +1,5 @@
 // directives.js
 
-/*
-
-    on btn hover > 0.5
-
-*/
-
 app.directive('streamViz', function () {
 
     return {
@@ -14,28 +8,19 @@ app.directive('streamViz', function () {
             
             // console.log(scope);
 
-            createSVG(scope, element);
+            scope.streamGraph = new Stream();
+            scope.streamGraph.createSVG(scope, element);
+                
+                scope.$watch('streamData', function(newVal, oldVal) {
 
-            scope.$watch('streamData', function(newVal, oldVal) {
-
-                // console.log(newVal);
-
-                if(newVal && newVal.length && scope.chart) {
-
-                        // console.log(newVal);
-                        redrawStreamGraph(newVal, scope, function (chart) {
-                            scope.chart = chart;
-                        })
-
-                    } else if(newVal && newVal.length) { // fist time loaded
-
-                        initStreamGraph(newVal, scope.colors, function (chart) {
-                            scope.chart = chart;
-                        });
-
-                    } 
-
-            }, true);
+                    if(scope.initData && scope.streamGraph.streaming) {
+                        
+                        // console.log(newVal)
+                        scope.streamGraph.redraw(newVal, scope);
+                        
+                    }
+                
+                })
 
         }
     }
@@ -43,83 +28,115 @@ app.directive('streamViz', function () {
 });
 
 
-function createSVG(scope, element){
-    scope.w = 400;
-    scope.h = 100;
+
+function Stream() {
+
+    var stream = this;
+
+    stream.streaming = true; // initial state of playing
+
+    stream.createSVG = function (scope, element) {
+
+        scope.w = 400;
+        scope.h = 100;
+        
+        // console.log('ha');
+        if (!(scope.svg != null)) {
+            scope.svg = d3.select(element[0]).append("svg").attr("width", scope.w).attr("height", scope.h).attr("id", "stream-viz");
+
+            // stream.svg=scope.svg;
+
+            return;
+        }
+
+    }
+
+    stream.init = function(newVal, colors, callback) {
     
-    // console.log('ha');
-    if (!(scope.svg != null)) {
-        scope.svg = d3.select(element[0]).append("svg").attr("width", scope.w).attr("height", scope.h).attr("id", "stream-viz");
-        return;
+        keyColor = function(d, i) {
+            return colors(i);
+        };
+
+        nv.addGraph(function() {
+
+            var chart = nv.models.stackedAreaChart()
+                              .x( function(d) { return d.x } )
+                              .y( function(d) { return d.y } )
+                              .color(keyColor)
+                              .showLegend(false)
+                              .showControls(false)
+                          // .attr("id", function(d) { return d[1] })
+                          // .clipEdge(true);
+            // // console.log(scope.chart);
+            chart.xAxis
+                .tickFormat(function(d) { return d3.time.format('%X')(new Date(d)) });
+
+            chart.yAxis
+                .tickFormat(d3.format(''));
+
+             d3.select("#stream-viz")
+                  .datum( newVal )
+                    .transition().duration(500).call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+
+
+            // MOUSE ACTIONS
+
+            /* chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); }); */
+
+            // chart.legend.dispatch.on('legendMouseover', function(e) { nv.log('New stateChange:', JSON.stringify(e)); }
+            
+
+            callback(chart);
+
+
+
+        });
+        
+    }
+
+    stream.redraw = function (newVal, scope) {    
+
+        // console.log("redraw")
+
+        scope.svg
+          .datum( newVal )
+            .transition().duration(500).call(scope.chart);
+
+    }
+
+    stream.startStream = function () {
+        
+        stream.streaming = true;
+
+    }
+
+    stream.stopStream = function () {
+        
+        stream.streaming = false;
+
     }
 
 }
 
-function initStreamGraph(newVal, colors, callback) {
 
-    keyColor = function(d, i) {
-        return colors(i);
-    };
+app.directive('datePicker', function () { 
+    // console.log("daterangepicker()");
 
-    nv.addGraph(function() {
+    return function (scope, element, attrs) { 
+           
+        element.daterangepicker({}, function(start,end) {
 
-        var chart = nv.models.stackedAreaChart()
-                      .x( function(d) { return d[1] } )
-                      .y( function(d) { return d[0] } )
-                      .color(keyColor)
-                      .showLegend(false)
-                      .showControls(false)
-                      // .attr("id", function(d) { return d[1] })
-                      // .clipEdge(true);
-        // // console.log(scope.chart);
-        chart.xAxis
-            .tickFormat(function(d) { return d3.time.format('%X')(new Date(d)) });
+            // console.log(moment(start).format(), moment(end).format());
 
-        chart.yAxis
-            .tickFormat(d3.format(''));
+            scope.setTimerange(moment(start).format(), moment(end).format());
 
-         d3.select("#stream-viz")
-              .datum( newVal )
-                .transition().duration(500).call(chart);
+        });
 
-        nv.utils.windowResize(chart.update);
-
-
-
-        // MOUSE ACTIONS
-
-        chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); });
-
-        // chart.legend.dispatch.on('legendMouseover', function(e) { nv.log('New stateChange:', JSON.stringify(e)); }
-        
-        
-
-
-
-        callback(chart);
-
-    });
-
-}
-
-function redrawStreamGraph (newVal, scope) {
-
-    // console.log("graph updated");
-    // console.log(scope)
-    // chart.stacked.scatter.clipVoronoi(false);
-    
-    // console.log(scope.val)
-    // console.log(newVal, oldVal);
-
-    scope.svg
-      .datum( newVal )
-        .transition().duration(500).call(scope.chart);
-
-    // nv.utils.windowResize(scope.chart.update);
-
-    // scope.chart.dispatch.on('stateChange', function(e) { nv.log('New stateChange:', JSON.stringify(e)); });
-    // scope.chart.dispatch.on('changeState', function(e) { nv.log('New changeState:', JSON.stringify(e)); });
-}
+    } 
+ })
 
 app.directive('vennCompare', function( ){
     
