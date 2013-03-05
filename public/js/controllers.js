@@ -113,7 +113,7 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
             }
 
             // console.log(apiClient);
-            socket.emit('client:feedConfig', apiClient.toJSON());
+            socket.emit('feedconfig', apiClient.toJSON());
 
         }
 
