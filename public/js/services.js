@@ -1,14 +1,14 @@
 /* Services */
 // console.log(window);
 
-app.factory('apiClient', function() {
+app.factory('apiClient', function($window) {
     
     // return new ApiClient();
-    return new FeedConfig();
+    return new $window.feedconfig.FeedConfig();
 
 });
 
-app.factory('d3data', function($window, $document) {
+app.factory('d3data', function($window) {
 
     return new $window.d3container.D3Container();
 
