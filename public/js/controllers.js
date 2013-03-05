@@ -1,6 +1,6 @@
 // controllers.js
 
-app.controller('MainCtrl', function($scope, $locale, $filter, $http, apiClient) {
+app.controller('MainCtrl', function($scope, $locale, $filter, $http, d3data, apiClient) {
         
     /* VARIABLES --------------------------------------------------------------
         */
@@ -12,7 +12,7 @@ app.controller('MainCtrl', function($scope, $locale, $filter, $http, apiClient) 
         $scope.colors = [];   // global array to store keywords color
         $scope.list = [];     // global array to store all 
 
-        $scope.keywords = apiClient.streamData;
+        $scope.keywords = d3data.current();
 
         console.log($scope);
 
@@ -36,24 +36,21 @@ app.controller('MainCtrl', function($scope, $locale, $filter, $http, apiClient) 
 
 });
 
-app.controller('FilterCtrl', function($scope, apiClient, socket) {
+app.controller('FeedCtrl', function($scope, apiClient, socket) {
 
     // Default values
-    console.log($scope);
-    
-    // var myFeedConfig = apiClient.feedConfig;
-    $scope.filter = apiClient.feedConfig;
-    $scope.filter.age = "All";
-    $scope.filter.gender = "Both";
-    $scope.filter.tier = "All";
-    
+    apiClient.setDemographics("Both","All","All");
+    apiClient.setRealtime("second", 30);
+    apiClient.setWordCount(5);
 
+    // instance to be watched within the scope
+    $scope.filter = apiClient;
 
     $scope.setAge = function(age) {
 
         // console.log("age : "+age);
         $scope.filter.age = age;
-        apiClient.feedConfig.age = age;
+        apiClient.setAgeRange(age);
 
     }
 
@@ -61,96 +58,128 @@ app.controller('FilterCtrl', function($scope, apiClient, socket) {
 
         // console.log("gender : "+gender);
         $scope.filter.gender = gender
-        apiClient.feedConfig.gender = gender
+        apiClient.setGender(gender)
 
     }
 
     $scope.setTier = function(tier) {
 
-        // console.log("tier : "+tier);
         $scope.filter.tier = tier;
-        apiClient.feedConfig.tier = tier;
-        // console.log(apiClient)
-
+        apiClient.setTier(tier);
+        
     }
 
+    // set number of keywords
+    $scope.setStreamSize = function (size) {
+
+        $scope.filter.samples = size;
+        apiClient.setWordCount(size);
+
+    }
+            
+    // set time sampling
+    $scope.setSampling = function (index) {
+
+        apiClient.setSampling(apiClient.validSampling[index])
+        $scope.filter.sampling = apiClient.validSampling[index];
+        return apiClient.sampling;
+        
+    } 
+
+    // set timeRange
+    $scope.setTimerange = function (start,end) {
+
+        console.log(start, end);
+
+        $scope.filter.start = start;
+        apiClient.SetStart(start);
+
+        $scope.filter.end = end;
+        apiClient.setEnd(end);
+        
+    }
+
+    $scope.ready = false;
+
     $scope.$watch('filter', function (newVal) {
-        console.log(apiClient.feedConfig)
-        socket.emit('client:feedConfig', apiClient.feedConfig)
+
+        if(newVal){
+
+            if($scope.ready == false) {
+
+                socket.emit('client:ready');
+                $scope.ready = true;
+
+            }
+
+            // console.log(apiClient);
+            socket.emit('client:feedConfig', apiClient.toJSON());
+
+        }
 
     }, true)
 
 })
 
-app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient, socket) {
+
+app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data, socket) {
 
     /* VARIABLES --------------------------------------------------------------
         */
+    
         // some global variables
-        
-        // $scope.streamSize = 5; // default number of keywords (y values)
-        // $scope.streamLength = 30; // timeframe;  number of x values; max length of data stream
-        
         $scope.colors = d3.scale.category20(); // define d3 color scheme    
 
         // stream data
         $scope.streamData = []; // init data
-        $scope.initData = false; // init data
+        $scope.initStream = false; // init data
 
 
     /* SOCKET API & DATA --------------------------------------------------------------
         */
+
+        console.log(d3data);
+
+        d3data.setXValues(30);
+
+        // update data on each value
+        d3data.on("updated", function() {
+
+            console.log("updated");
+
+            $scope.streamData = d3data.current();
+
+            // init graph
+            if ($scope.initStream == false) {
+
+                console.log('init');
                 
-        // send init values
-        socket.emit('client:feed:init', apiClient.filter);
-
-        // receive init values
-        socket.on('send:feed:init', function (data) {
-
-            console.log('send:init');
-            console.log(data);
-
-            $scope.initData = true;
-
-            // create stream graph
-            // $scope.streamGraph.init(data.initdata);
-            
-            $scope.streamGraph.init(data.initdata, $scope.colors, function (chart) {
-                $scope.chart = chart;
-            });
-
-            $scope.streamData = data.initdata;
-
-        });
-
-        // receive new slice of data
-        socket.on('send:datapoint', function (data) {
-
-            // console.log('send:feed:point');
-            // console.log(data);
-
-            addSliceToStream($scope.streamData, $scope.streamSize, data.datapoint, function(stream) {
-                // console.log(streamData)
-                $scope.streamData =  stream;
+                $scope.streamGraph.init($scope.streamData, $scope.colors, function (chart) {
                 
-                
-                /*
-                updateKeywordList(stream, $scope.$parent.list, function(kws) {
+                    $scope.chart = chart;
 
-                    $scope.$parent.keywords = kws;
-                
                 });
-*/
-                
-                
 
-            });
+                $scope.initStream = true;
 
-        });
+            } 
 
-        
-        //
+        })
 
+
+        socket.on('slice', function (slice) {
+
+            // console.log("receiving slice")
+            var datapoint = slice.datapoint;
+
+            for (var j = 0; j < datapoint.length; j++) {
+
+              // console.log(datapoint[j]);
+              d3data.update(datapoint[j].keyword, datapoint[j].sliceid, datapoint[j].count);
+
+            };
+
+        })
 
     /* KEYWORDS BUTTONS ----------------------------------------------------------------
         */
@@ -171,25 +200,10 @@ app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient, socket
                     
                     if(i == index) d.disabled == true;
                     else d.disabled = (d.disabled ==false) ? d.disabled =true : d.disabled = false;
-
-                    // console.log(d)
-                    // colors()
-                    // if(d.key == item.key) d.disabled = (d.disabled ==true) ? d.disabled =false : d.disabled = true; //
-                    // enabled = d.disabled;
                     return d;
                 });
 
-                // redraw graph
-                // chart(svg);
                 svg.transition().duration(500).call($scope.$$childHead.chart);
-                // console.log(item)
-                // btn class
-                // var state =  (item.state == "enabled") ? "enabled" : "disabled";
-                // item.state = state;
-
-
-                // return item.state;
-
             })
 
         }
@@ -202,11 +216,8 @@ app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient, socket
         // Fade in/out for stream stacks on mouse over
         $scope.stackFadeIn = function stacksFadeIn(index) {
 
-            // console.log("other stacks fade to "+ index);
-
             var svg = d3.select("#stream-viz");
             var path = svg.select('.nv-areaWrap').selectAll('path.nv-area')
-            // console.log(path, index)
 
             for (var i = 0; i < path[0].length; i++) {
 
@@ -240,7 +251,6 @@ app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient, socket
             });
         });
         
-        
     /* STREAM TOOLBAR ----------------------------------------------------------------
         */
 
@@ -271,77 +281,6 @@ app.controller('StreamCtrl', function($scope, $http, $timeout, apiClient, socket
             
             return $scope.streamGraph.streaming;
         }
-
-        
-        // Values for Display
-        $scope.samples = 5;
-        $scope.sampling = 0;
-        $scope.samplings = [
-                "second",
-                "minute",
-                "hour",
-                "day",
-                "month",
-                "year"
-        ];
-
-        $scope.timerange = [
-                "today",
-                "yesterday",
-                "this week",
-                "2 weeks before",
-                "month",
-                "year"
-        ];
-
-        $scope.startdate = Date.now();
-        $scope.enddate = Date.now() - 360000;
-
-        // tmp var to be watched within scope 
-        var filter = apiClient.feedConfig;
-
-        // set number of keywords
-        $scope.setStreamSize = function setStreamSize (size) {
-
-            filter.samples = size;
-            apiClient.samples = size;
-            // console.log("$scope.streamSize : "+$scope.streamSize);
-
-        }
-            
-        // set time sampling
-        $scope.setSampling = function (sampling) {
-
-            // console.log(sampling)
-            filter.sampling = $scope.samplings[sampling];
-            apiClient.feedConfig.sampling = $scope.samplings[sampling];
-
-
-            return $scope.samplings[sampling];
-            // console.log("$scope.streamLength : "+$scope.streamLength);
-
-        } 
-
-        $scope.setTimerange = function (start,end) {
-
-            console.log(start, end);
-
-            filter.start = start;
-            apiClient.feedConfig.start = start;
-
-            filter.end = end;
-            apiClient.feedConfig.end = end;
-            
-
-        }
-
-        // send update to server
-        $scope.$watch('filter', function (newVal) {
-
-            console.log(apiClient.feedConfig)
-            socket.emit('client:feedConfig', apiClient.feedConfig)
-
-        }, true)
 
 });
 

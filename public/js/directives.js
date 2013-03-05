@@ -13,7 +13,7 @@ app.directive('streamViz', function () {
                 
                 scope.$watch('streamData', function(newVal, oldVal) {
 
-                    if(scope.initData && scope.streamGraph.streaming) {
+                    if(scope.initStream && scope.streamGraph.streaming) {
                         
                         // console.log(newVal)
                         scope.streamGraph.redraw(newVal, scope);

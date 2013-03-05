@@ -1,10 +1,19 @@
 /* Services */
+// console.log(window);
 
-app.factory('apiClient', function($timeout, socket) {
-
-    return new ApiClient();
+app.factory('apiClient', function() {
+    
+    // return new ApiClient();
+    return new FeedConfig();
 
 });
+
+app.factory('d3data', function($window, $document) {
+
+    return new $window.d3container.D3Container();
+
+});
+
 
 
 app.factory('socket', function ($rootScope) {
@@ -29,9 +38,15 @@ app.factory('socket', function ($rootScope) {
             }
           });
         })
-      }
+      },
+      disconnect: function () {
+        socket.disconnect();
+      },
+      socket: socket
+
     };
   });
+
 
 
 function ApiClient() {

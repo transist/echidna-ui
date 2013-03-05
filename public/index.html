@@ -67,11 +67,11 @@
 
     <div id="content" class="row-fluid">
 
-      <div class="span6">
+      <div id="client-menu" class="span6">
         <ng-include src="'partials/menu.html'"> </ng-include>
       </div>
       
-      <div class="span3" ng-controller="compareCtrl">
+      <div id="venn-container" class="span3" ng-controller="compareCtrl">
         <ng-include src="'partials/venn.html'"></ng-include>
       </div>
       
@@ -103,6 +103,9 @@
 <script src="lib/jquery-ui/jquery-ui.min.js"></script>
 <script src="lib/bootstrap/bootstrap.min.js"></script>
 
+<script src="echidna-data/bundle.js"></script>
+<script src="echidna-data/feedconfig.browser.js"></script>
+
 <script src="lib/angular/angular.min.js"></script>
 <script src="lib/angular/angular-resource.min.js"></script>
 <script src="lib/angular/angular-ui.js"></script>
@@ -119,19 +122,6 @@
 
 <!-- LOCAL -->
 
-
-<!-- stream 
-<script src="lib/nvd3/src/utils.js"></script>
-<script src="lib/nvd3/src/tooltip.js"></script>
-<script src="lib/nvd3/nv.d3.min.js"></script>
-<script src="lib/nvd3/src/models/axis.js"></script>
-<script src="lib/nvd3/src/models/legend.js"></script>
-<script src="lib/nvd3/src/models/scatter.js"></script>
-<script src="lib/nvd3/src/models/stackedArea.js"></script>
-<script src="lib/nvd3/src/models/stackedAreaChart.js"></script>
--->
-
-
 <!-- venn diagram -->
 <script type="text/javascript" src="lib/d3/d3.venn.js"></script>
 <script type="text/javascript" src="lib/d3/numeric.js"></script>
@@ -142,9 +132,8 @@
 <script src="lib/bootstrap-daterangepicker/moment.js"></script>
 <script src="lib/bootstrap-daterangepicker/daterangepicker.js"></script>
 
-<!-- <script src="lib/date/date.js"></script>  -->
-
 <!-- app files -->
+
 <script src="js/app.js"></script>
 <script src="js/services.js"></script>
 <script src="js/directives.js"></script>

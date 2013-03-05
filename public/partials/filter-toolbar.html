@@ -1,4 +1,4 @@
-<div id="toolbar" class="row-fluid"  ng-controller="FilterCtrl">
+<div id="toolbar" class="row-fluid"  ng-controller="FeedCtrl">
 
   <div class="span5">
   
@@ -57,30 +57,30 @@
             All
           </button>
           <button 
-            ng-click='setAge("18")'  
+            ng-click='setAge("18-")'  
             class="btn" 
-            ng-class="{true:'active btn-inverse', false:''}[filter.age == '18']" 
+            ng-class="{true:'active btn-inverse', false:''}[filter.age == '18-']" 
           >
             18-
           </button>
           <button 
-            ng-click='setAge("24")'  
+            ng-click='setAge("24-")'  
             class="btn" 
-            ng-class="{true:'active btn-inverse', false:''}[filter.age == '24']" 
+            ng-class="{true:'active btn-inverse', false:''}[filter.age == '24-']" 
           >
             24-
           </button>
           <button 
-            ng-click='setAge("35")'  
+            ng-click='setAge("35-")'  
             class="btn" 
-            ng-class="{true:'active btn-inverse', false:''}[filter.age == '35']" 
+            ng-class="{true:'active btn-inverse', false:''}[filter.age == '35-']" 
           >
             35-
           </button>
           <button 
-            ng-click='setAge("40")'  
+            ng-click='setAge("40+")'  
             class="btn" 
-            ng-class="{true:'active btn-inverse', false:''}[filter.age == '40']" 
+            ng-class="{true:'active btn-inverse', false:''}[filter.age == '40+']" 
           >
             40+
           </button>

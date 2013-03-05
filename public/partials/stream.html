@@ -12,7 +12,7 @@
     <a href="#" ng-click="switchStream('expand')" class="">Expanded</a>
   </div>
 
-  <form class="form-inline pull-right stream-view-utils">
+  <form class="form-inline pull-right stream-view-utils" ng-controller="FeedCtrl">
       <div class="stream-filter-item">
         <label for="stream-items-len">Words (1 to 20):
           <input id="stream-items-len" type="number" name="stream-items-len" min="1" max="20" value="{{samples}}" ng-model="samples" ng-change="setStreamSize(samples)">
@@ -23,6 +23,15 @@
         <label for="samplings">{{ samplings[sampling] }}
           <input id="samplings" type ="range" min ="0" max="4" step ="1" value ="{sampling}" ng-model="sampling" ng-change="setSampling(sampling)"/>
         </label>
+      </div>
+
+      <div class="stream-filter-item">
+          <label for="feed-type">
+            <select disabled id="feed-type" class="disabled" type="selectbox" name="feed-type">
+              <option value="realtime">Real Time</option>
+              <option value="historic">Historic</option>
+            </select>
+          </label>
       </div>
 
       <div id="timerange" class="pull-right stream-filter-item" >
