@@ -1,0 +1,29 @@
+<div id="streamUtils" class="row-fluid">
+
+  <div class="offset1"></div>
+
+  <div class="btn switch-streaming span1" ng-click="startStopStream()">
+      <i ng-class="{true:'icon-pause', false:'icon-play'}[streamGraph.streaming]"></i>
+  </div>
+
+  <div class="switch-stream-mode btn-small span3">
+    <a href="#" ng-click="switchStream('stack')"  class="">Stacked</a>
+    <a href="#" ng-click="switchStream('stream')" class="">Stream</a>
+    <a href="#" ng-click="switchStream('expand')" class="">Expanded</a>
+  </div>
+
+  <form class="form-inline pull-right stream-view-utils" ng-controller="FeedCtrl">
+
+      
+        <label for="stream-items-len">Words (1 to 20):
+          <input id="stream-items-len" type="number" name="stream-items-len" min="1" max="20" value="{{samples}}" ng-model="samples" ng-change="setStreamSize(samples)">
+        </label>
+      
+
+      
+        <label for="samplings">{{ samplings[sampling] }}
+          <input id="samplings" type ="range" min ="0" max="4" step ="1" value ="{sampling}" ng-model="sampling" ng-change="setSampling(sampling)"/>
+        </label>
+      
+  </form>
+</div>

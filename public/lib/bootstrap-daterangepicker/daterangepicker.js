@@ -50,6 +50,9 @@
             monthNames: monthNames,
             firstDay: 0
         };
+        
+        // by default, the daterangepicker element is placed at the bottom of HTML body
+        this.parentEl = 'body';
 
         localeObject = this.locale;
 
@@ -105,7 +108,12 @@
                 '</div>' +
               '</div>';
 
-        this.container = $(DRPTemplate).appendTo('body');
+        this.parentEl = (hasOptions && options.parentEl && $(options.parentEl)) || $(this.parentEl);
+
+        // this.container = $(DRPTemplate).appendTo('body');
+        // this.container = $(DRPTemplate).appendTo(selector);
+  
+        this.container = $(DRPTemplate).appendTo(this.parentEl);
 
         if (hasOptions) {
 
@@ -310,16 +318,26 @@
         },
 
         move: function () {
+
+            var parentOffset = {
+                top: this.parentEl.offset().top - this.parentEl.scrollTop(),
+                left: this.parentEl.offset().left - this.parentEl.scrollLeft(),
+            };
+
             if (this.opens == 'left') {
                 this.container.css({
-                    top: this.element.offset().top + this.element.outerHeight(),
-                    right: $(window).width() - this.element.offset().left - this.element.outerWidth(),
+                    // top: this.element.offset().top + this.element.outerHeight() + this.offsetTweak.top,
+                    // right: $(window).width() - this.element.offset().left - this.element.outerWidth() - this.offsetTweak.left,
+                    top: this.element.offset().top + this.element.outerHeight() - parentOffset.top,
+                    right: $(window).width() - this.element.offset().left - this.element.outerWidth() - parentOffset.left,
                     left: 'auto'
                 });
             } else {
                 this.container.css({
-                    top: this.element.offset().top + this.element.outerHeight(),
-                    left: this.element.offset().left,
+                    /*top: this.element.offset().top + this.element.outerHeight() + this.offsetTweak.top,
+                    left: this.element.offset().left + this.offsetTweak.left,*/
+                    top: this.element.offset().top + this.element.outerHeight() - parentOffset.top,
+                    left: this.element.offset().left - parentOffset.left,
                     right: 'auto'
                 });
             }

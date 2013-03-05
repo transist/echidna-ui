@@ -127,7 +127,20 @@ app.directive('datePicker', function () {
 
     return function (scope, element, attrs) { 
            
-        element.daterangepicker({}, function(start,end) {
+        element.daterangepicker({
+
+            ranges: {
+                'Today': [moment().day(0), moment().day(0)],
+                'Yesterday': [moment().day(-1), moment().day(-1)],
+                'Last 7 Days': [moment().day(-7), moment().day(0)],
+                /*'Last 30 Days': [Date.today().add({ days: -29 }), 'today'],
+                'This Month': [Date.today().moveToFirstDayOfMonth(), Date.today().moveToLastDayOfMonth()],
+                'Last Month': [Date.today().moveToFirstDayOfMonth().add({ months: -1 }), Date.today().moveToFirstDayOfMonth().add({ days: -1 })]*/
+            }, 
+            // parentEl : this.parent
+    
+
+        }, function(start,end) {
 
             // console.log(moment(start).format(), moment(end).format());
 

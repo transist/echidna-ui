@@ -15,9 +15,11 @@
       data-jqyoui-options="{ revert: 'invalid' }"  
       jqyoui-draggable="{ index: {{$index}} }"
       ng-model="streamData"
-      data-placement="top"
+      data-placement="bottom"
       data-unique="1"
+      data-title="{{item.key}}"
       bs-popover="'partials/keyword-tooltip.html'"
+      bs-popover
       ng-mouseenter="stackFadeIn($index)" 
       ng-mouseleave="stackFadeOut($index)"
       >

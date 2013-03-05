@@ -1,9 +1,23 @@
+html,body{
+    height: 100%
+}
+
+#main
+{
+overflow:auto;
+padding-bottom:150px; /* this needs to be bigger than footer height*/
+}
+
+.navbar {
+    margin-bottom: 0px;
+}
+
 #toolbar {
     background-color: #f5f5f5
 }
 
 #content {
-    /*height: 100%*/
+    height: 100%
 }
 
 #client-menu {
@@ -15,10 +29,12 @@
 }
 
 #flow {
-    position: relative;
+    vertical-align: bottom;
+    /*position: relative;
     bottom:0;
     width:100%;
     height: auto;
+    max-height: 50%*/
 }
 
 #streamUtils {
@@ -28,9 +44,19 @@
     color:white;
 }
 
-.switch-stream {
+/*.switch-streaming {
     width:20%;
 
+}*/
+
+.switch-stream-mode, .switch-streaming {
+    float:left;
+}
+
+
+.switch-stream-mode a, .switch-stream-mode a:hover, .switch-stream-mode a:visited {
+    color:white;
+    font:20pt;
 }
 
 .stream-view-utils {
@@ -38,15 +64,11 @@
     float:left;
 }
 
-.stream-filter-item {
+/*.stream-filter-item {
     float:right;
     margin-left: 25px
 }
-
-.switch-stream a, .switch-stream a:hover, .switch-stream a:visited {
-    color:white;
-    font:20pt;
-}
+*/
 
 #samplings {
     width:100px;
@@ -114,3 +136,15 @@
     height: 0px;
     width: 0px;
 }
+
+
+.popover-inner {
+    width: 600px;
+}
+
+/*.navbar .dropdown-menu.bottom-up::after {
+    border-bottom: 0px solid transparent !important;
+    border-top: 6px solid white;
+    top: auto !important;
+    bottom: -6px;
+}*/

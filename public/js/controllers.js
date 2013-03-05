@@ -89,13 +89,15 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
     // set timeRange
     $scope.setTimerange = function (start,end) {
 
-        console.log(start, end);
+        console.log("set up timerange", start, end);
 
-        $scope.filter.start = start;
-        apiClient.SetStart(start);
 
-        $scope.filter.end = end;
-        apiClient.setEnd(end);
+
+        // $scope.filter.start = start;
+        // apiClient.SetStart(start);
+
+        // $scope.filter.end = end;
+        // apiClient.setEnd(end);
         
     }
 
