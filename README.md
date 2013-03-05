@@ -1,10 +1,6 @@
 # Echidna UI
 UI components for Echidna
 
-
-
-You can fake 
-
 ## Require Echidna-data
     
 You should clone the echidna-data folder in order to get UI working
