@@ -135,6 +135,11 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data
         // stream data
         $scope.streamData = []; // init data
         $scope.initStream = false; // init data
+        
+        // init stream type
+        $scope.streamType = "stack";
+        
+        // $scope.$$childHead.chart.style = $scope.streamType;
 
 
     /* SOCKET API & DATA --------------------------------------------------------------
@@ -260,16 +265,23 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data
         $scope.switchStream = function switchStream (type) {
             
             console.log(type)
+            
+            // console.log($scope)
+
             var style  = { style : type}
 
             // var chart = $scope.$$childHead.chart;
             $scope.$$childHead.chart.style(type)
 
             // console.log($scope.$$childHead.chart.state())
+            $scope.streamType = type;
 
             var svg = d3.select("#stream-viz")
             $scope.$$childHead.chart(svg)
+
         }
+
+
 
         // play/stop button
         $scope.startStopStream = function startStopStream () {

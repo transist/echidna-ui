@@ -6,10 +6,21 @@
       <i ng-class="{true:'icon-pause', false:'icon-play'}[streamGraph.streaming]"></i>
   </div>
 
-  <div class="switch-stream-mode btn-small span3">
-    <a href="#" ng-click="switchStream('stack')"  class="">Stacked</a>
-    <a href="#" ng-click="switchStream('stream')" class="">Stream</a>
-    <a href="#" ng-click="switchStream('expand')" class="">Expanded</a>
+  <div class="switch-stream-mode span3">
+    <a href="#" 
+      ng-click="switchStream('stack')"  
+      ng-class="{true:'active', false:''}[streamType == 'stack']"  
+      class="switch-stream-btn">Stacked</a>
+    <a 
+      href="#" 
+      ng-click="switchStream('stream')" 
+      ng-class="{true:'active', false:''}[streamType == 'stream']"
+      class="switch-stream-btn">Stream</a>
+    <a 
+      href="#" 
+      ng-click="switchStream('expand')" 
+      ng-class="{true:'active', false:''}[streamType == 'expand']"
+      class="switch-stream-btn">Expanded</a>
   </div>
 
   <form class="form-inline pull-right stream-view-utils" ng-controller="FeedCtrl">
