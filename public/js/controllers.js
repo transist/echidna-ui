@@ -4,7 +4,7 @@ app.controller('MainCtrl', function($scope, $locale, $filter, d3data) {
         
     /* VARIABLES --------------------------------------------------------------
         */
-        $scope.name = 'Your brand';
+        $scope.name = 'Dashboard';
 
         // $scope.appName = "Keywords & Trends generator"
         // $scope.keywords = []; // array to store only keywords text
