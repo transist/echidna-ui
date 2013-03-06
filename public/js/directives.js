@@ -13,7 +13,10 @@ app.directive('streamViz', function () {
                 
                 scope.$watch('streamData', function(newVal, oldVal) {
 
-                    if(scope.initStream && scope.streamGraph.streaming) {
+                    // console.log(scope.initStream, scope.streamGraph.streaming)
+                    // console.log(newVal);
+
+                    if(scope.streamGraph.ready && scope.streamGraph.streaming ) {
                         
                         // console.log(newVal)
                         scope.streamGraph.redraw(newVal, scope);
@@ -33,6 +36,7 @@ function Stream() {
 
     var stream = this;
 
+    stream.ready = false;
     stream.streaming = true; // initial state of playing
 
     stream.createSVG = function (scope, element) {
@@ -79,6 +83,8 @@ function Stream() {
                     .transition().duration(500).call(chart);
 
             nv.utils.windowResize(chart.update);
+
+            stream.ready = true;
 
 
 

@@ -1,6 +1,6 @@
 // controllers.js
 
-app.controller('MainCtrl', function($scope, $locale, $filter, $http, d3data, apiClient) {
+app.controller('MainCtrl', function($scope, $locale, $filter, d3data) {
         
     /* VARIABLES --------------------------------------------------------------
         */
@@ -39,9 +39,14 @@ app.controller('MainCtrl', function($scope, $locale, $filter, $http, d3data, api
 app.controller('FeedCtrl', function($scope, apiClient, socket) {
 
     // Default values
+    var wordCount = 5;
+
     apiClient.setDemographics("Both","All","All");
     apiClient.setRealtime("second", 30);
-    apiClient.setWordCount(5);
+    apiClient.setWordCount(wordCount);
+    $scope.samples = wordCount;
+    $scope.sampling = 0;
+    $scope.samplings = apiClient.validSampling;
 
     // instance to be watched within the scope
     $scope.filter = apiClient;
@@ -152,22 +157,22 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data
         // update data on each value
         d3data.on("updated", function() {
 
-            console.log("updated");
+            // console.log("updated", $scope.streamGraph.ready);
 
+            // update data
             $scope.streamData = d3data.current();
 
             // init graph
-            if ($scope.initStream == false) {
+            if ($scope.streamGraph.ready == false && !$scope.initStream ) {
 
-                console.log('init');
-                
+                console.log("init")
+
                 $scope.streamGraph.init($scope.streamData, $scope.colors, function (chart) {
-                
+
                     $scope.chart = chart;
+                    $scope.initStream = true;
 
                 });
-
-                $scope.initStream = true;
 
             } 
 
@@ -178,10 +183,13 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data
 
             // console.log("receiving slice")
             var datapoint = slice.datapoint;
+            // if(d3data.current()[0]) console.log(d3data.current()[0].values.length)
+            // if($scope.streamData.ready) console.log(d3data.current()[0].values.length)
+            // console.log(slice);
 
             for (var j = 0; j < datapoint.length; j++) {
 
-              // console.log(datapoint[j]);
+              // console.log(datapoint);
               d3data.update(datapoint[j].keyword, datapoint[j].sliceid, datapoint[j].count);
 
             };
