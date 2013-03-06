@@ -14,6 +14,13 @@ app.factory('d3data', function($window) {
 
 });
 
+// app.factory('slicer', function($window) {
+    
+//     // return new ApiClient();
+//     console.log($window);
+//     return new $window.slicer.Slice();
+
+// })
 
 
 app.factory('socket', function ($rootScope) {

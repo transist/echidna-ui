@@ -106,21 +106,20 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
         
     }
 
-    $scope.ready = false;
+    // $scope.ready = false;
 
     $scope.$watch('filter', function (newVal) {
 
         if(newVal){
 
-            if($scope.ready == false) {
-
-                socket.emit('client:ready');
-                $scope.ready = true;
-
-            }
-
-            // console.log(apiClient);
             socket.emit('feedconfig', apiClient.toJSON());
+
+            // if($scope.ready == false) {
+
+            //     socket.emit('client:ready');
+            //     $scope.ready = true;
+            // }
+            // console.log(apiClient);
 
         }
 
@@ -129,7 +128,7 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
 })
 
 
-app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data, socket) {
+app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $window, d3data, socket) {
 
     /* VARIABLES --------------------------------------------------------------
         */
@@ -146,7 +145,6 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data
         
         // $scope.$$childHead.chart.style = $scope.streamType;
 
-
     /* SOCKET API & DATA --------------------------------------------------------------
         */
 
@@ -157,7 +155,7 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data
         // update data on each value
         d3data.on("updated", function() {
 
-            // console.log("updated", $scope.streamGraph.ready);
+            console.log("updated", $scope.streamGraph.ready);
 
             // update data
             $scope.streamData = d3data.current();
@@ -181,18 +179,24 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data
 
         socket.on('slice', function (slice) {
 
+            
+            var s = new $window.slicer.Slice(slice);
+
+            d3data.updateSlice(s);
+            console.log(s);
+
+            // d3data.update(slice.name, slice.time, slice.count);
             // console.log("receiving slice")
-            var datapoint = slice.datapoint;
+            
             // if(d3data.current()[0]) console.log(d3data.current()[0].values.length)
             // if($scope.streamData.ready) console.log(d3data.current()[0].values.length)
             // console.log(slice);
 
-            for (var j = 0; j < datapoint.length; j++) {
+            
 
               // console.log(datapoint);
-              d3data.update(datapoint[j].keyword, datapoint[j].sliceid, datapoint[j].count);
 
-            };
+            
 
         })
 
