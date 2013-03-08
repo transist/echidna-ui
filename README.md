@@ -13,4 +13,6 @@ UI components for Echidna
     node app.js
 
 You can access on the browser on localhost:3030
-Bes ure to checkout master branch on bot echidna-ui & echdina-ui-server
+
+
+Be sure to checkout master branch on both echidna-ui & echdina-ui-server
