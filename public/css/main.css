@@ -1,9 +1,13 @@
+#main {
+    padding :0;
+}
 .navbar {
     margin-bottom: 0px;
 }
 
 #toolbar {
-    background-color: #f5f5f5
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #efefef;
 }
 
 #content {
@@ -20,23 +24,19 @@
 
 #flow {
     padding-bottom:20px;
-/*    vertical-align: bottom;
-    position: relative;
-    margin-top: -400px;  negative value of footer height 
-    height: 150px;
-    clear:both;
-    padding-top:20px;*/
+    background-color: #f5f5f5;
+    border-top: 1px solid #efefef;
 }
 
 #streamUtils .navbar-inner{
 
-    background-image: -webkit-linear-gradient(bottom,black,#666666);
-    color:white;
+    /*background-image: -webkit-linear-gradient(bottom,black,#666666);*/
+    /*color:white;*/
     
 }
 
 #streamUtils .navbar-inner a{
-    color: #cccccc;
+    /*color: #cccccc;*/
     text-shadow:none;
 }
 
@@ -48,7 +48,7 @@
 }
 
 a.switch-stream-btn.active, a.switch-stream-btn.active:hover {
-    background-color: #cccccc;
+    /*background-color: #cccccc;*/
     color:black;
 }
 a.switch-stream-btn.active:after {
@@ -57,7 +57,7 @@ a.switch-stream-btn.active:after {
     height:0;
     border-left:10px solid transparent;
     border-right:10px solid transparent;
-    border-bottom:10px solid #cccccc;
+    border-bottom:10px solid black;
     position:relative;
     bottom:39px;
     right:60px;
