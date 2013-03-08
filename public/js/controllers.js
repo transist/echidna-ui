@@ -27,6 +27,37 @@ app.controller('MainCtrl', function($scope, $locale, $filter, d3data) {
             $scope.locale = $filter('i18n')('Language: %1', $locale.id);
         }
 
+    /* resize window */
+
+    var computeWidth = function() {
+
+        var diff = 42+ 50+ $("#flow").height() +160;
+        // var diff = $('#flow').height(), $('#toolbar').height(), $("#topbar").height();
+
+        console.log($('#flow').height(), $('#toolbar').height(), $("#topbar").height())
+
+        console.log(diff);
+        return window.innerHeight - diff;
+
+    };
+
+
+    // console.log()
+    $scope.boxStyle = {height: computeWidth() + 'px'};
+    
+    angular.element(document).on('ready', function() {
+        $scope.boxStyle.height = computeWidth() + 'px';
+        $scope.$apply();        
+    })
+
+    angular.element(window).bind('resize', function() {
+
+        $scope.boxStyle.height = computeWidth() + 'px';
+        $scope.$apply();
+
+    });
+
+
 
     /* SAVE METHODS --------------------------------------------------------------
         */
