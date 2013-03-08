@@ -42,7 +42,7 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
     var wordCount = 5;
 
     apiClient.setDemographics("Both","All","All");
-    apiClient.setRealtime("second", 30);
+    apiClient.setRealtime("second", 10);
     apiClient.setWordCount(wordCount);
     $scope.samples = wordCount;
     $scope.sampling = 0;

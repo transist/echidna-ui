@@ -69,23 +69,26 @@ function Stream() {
                               .color(keyColor)
                               .showLegend(false)
                               .showControls(false)
-                          // .attr("id", function(d) { return d[1] })
-                          // .clipEdge(true);
-            // // console.log(scope.chart);
+                              .margin({top:0,right:0,bottom:20,left:0})
+                              ;
             
             chart.xAxis
                 .tickFormat(function(d) { return d3.time.format('%X')(new Date(d)) })
                 .orient("top")
                 // .tickPadding(0)
-                // .attr("transform", "translate(0,30)");
 
             chart.yAxis
-                .tickFormat( d3.format('%2') )
+                .tickFormat( d3.format('.,') )
                 .orient("right")
                 // .tickPadding(0)
                 // .attr("transform", "translate(0,30)");
+            
 
-             d3.select("#stream-viz")
+            
+
+            console.log(chart.margin());
+
+            d3.select("#stream-viz")
                     .datum( newVal )
                     .transition().duration(500).call(chart);
 
@@ -113,12 +116,11 @@ function Stream() {
     stream.redraw = function (newVal, scope) {    
 
         // console.log("redraw")
+        //     
+        d3.select('nv-wrap.nv-stackedAreaChart')
+            .attr("transform","translate(0,0)");
 
-        scope.svg
-            .select('g.nv-wrap.nv-stackedAreaChart')
-            .attr('transform', 'translate(0,0)');
-
-        //     .enter("g")
+         //     .enter("g")
         //     .translate("0,0");
 
         scope.svg
@@ -306,4 +308,11 @@ function redrawVenn(newVal, scope, callback) {
 }
 
 
+app.directive('onWindowResize', function () {
+
+    return function (scope, element, attrs) { 
+
+    }
+
+})
 

@@ -1,0 +1,20 @@
+{
+  "name": "echidna",
+  "version": "0.0.1",
+  "main": "./css/main.css",
+  "dependencies": {
+
+    "jquery"            :   "~1.8.1",
+    "jquery-ui"         :   "~1.8",
+    "bootstrap"         :   "2.3.0",
+    "font-awesome"      :   "3.0.2",
+    "angular"           :   "",
+    "angular-dragdrop"  :   "latest",
+    "angular-ui"        :   "0.4.0",
+    "angular-strap"     :   "",
+    "d3"                :   "~2.10.2",
+    "bootstrap-daterangepicker" : "git://github.com/nsb/bootstrap-daterangepicker.git",
+    "nvd3"              :   "git://github.com/novus/nvd3.git"
+
+  }
+}
