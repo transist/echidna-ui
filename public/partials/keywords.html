@@ -1,12 +1,6 @@
 <div id="keywords" class="row-fluid">
 
-  <div class="offset1">
-    <!-- nothing -->
-  </div>
-
-  <div id="keywords-list" class="span9">
-
-    <!-- {{ streamData }} -->
+  <div class="keywords-inner">
   
     <div 
       class="btn keyword-item keyword-{{$index}} {{item.key}} {{item.state}} btn-draggable" 
@@ -23,13 +17,11 @@
       ng-mouseenter="stackFadeIn($index)" 
       ng-mouseleave="stackFadeOut($index)"
       >
-
-      <p>
-        <span style="color: {{ colors($index) }}" class="circle">
-          <i class="icon-plus-sign"></i>
-        </span> 
-        {{item.key}}
-      </p>
+      <span style="color: {{ colors($index) }}" class="circle">
+        <i class="icon-plus-sign"></i>
+      </span> 
+      {{item.key}}
+    
 
     </div>
 

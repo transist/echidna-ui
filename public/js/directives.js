@@ -72,14 +72,21 @@ function Stream() {
                           // .attr("id", function(d) { return d[1] })
                           // .clipEdge(true);
             // // console.log(scope.chart);
+            
             chart.xAxis
-                .tickFormat(function(d) { return d3.time.format('%X')(new Date(d)) });
+                .tickFormat(function(d) { return d3.time.format('%X')(new Date(d)) })
+                .orient("top")
+                // .tickPadding(0)
+                // .attr("transform", "translate(0,30)");
 
             chart.yAxis
-                .tickFormat(d3.format(''));
+                .tickFormat( d3.format('%2') )
+                .orient("right")
+                // .tickPadding(0)
+                // .attr("transform", "translate(0,30)");
 
              d3.select("#stream-viz")
-                  .datum( newVal )
+                    .datum( newVal )
                     .transition().duration(500).call(chart);
 
             nv.utils.windowResize(chart.update);
@@ -106,6 +113,13 @@ function Stream() {
     stream.redraw = function (newVal, scope) {    
 
         // console.log("redraw")
+
+        scope.svg
+            .select('g.nv-wrap.nv-stackedAreaChart')
+            .attr('transform', 'translate(0,0)');
+
+        //     .enter("g")
+        //     .translate("0,0");
 
         scope.svg
           .datum( newVal )

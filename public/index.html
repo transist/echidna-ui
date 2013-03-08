@@ -34,15 +34,17 @@
               </a>
 
               <a href="#" class="brand">{{"app name" | i18n}}</a>
+              <ul id="lgg-selector" class="nav">
+                  <li class="lgg-select">
+                      <a  href="#" ng-click="setLocale('zh-cn')">中文</a>
+                  </li> 
+                  <li class="lgg-select">
+                      <a  href="#" ng-click="setLocale('en-us')">En</a>
+                  </li>
+              </ul>
 
               <div class="nav-collapse collapse pull-right">
                 <ul class="nav">
-                  <li>
-                    <p>
-                      <a href="#" ng-click="setLocale('zh-cn')">中文</a>
-                       | 
-                      <a href="#" ng-click="setLocale('en-us')">English</a>
-                  </li>
                   <li class="active"><a href="">{{ "menu home" | i18n }}</a></li>
                   <li>
                     <a href="">
