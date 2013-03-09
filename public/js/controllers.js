@@ -183,7 +183,7 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
 
         console.log(d3data);
 
-        d3data.setXValues(3);
+        d3data.setXValues(20);
 
         // update data on each value
         d3data.on("updated", function() {
