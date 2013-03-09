@@ -160,7 +160,7 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
 })
 
 
-app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data, socket) {
+app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $window, d3data, socket) {
 
     /* VARIABLES --------------------------------------------------------------
         */
@@ -183,12 +183,10 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data
 
         console.log(d3data);
 
-        d3data.setXValues(30);
+        d3data.setXValues(3);
 
         // update data on each value
         d3data.on("updated", function() {
-
-            // console.log("updated", $scope.streamGraph.ready);
 
             // update data
             $scope.streamData = d3data.current();
@@ -209,21 +207,29 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, d3data
 
         })
 
+        socket.on('connect', function () {
+            
+            console.log('socket.io connected');
+
+        });
 
         socket.on('slice', function (slice) {
 
-            // console.log("receiving slice")
-            var datapoint = slice.datapoint;
-            // if(d3data.current()[0]) console.log(d3data.current()[0].values.length)
-            // if($scope.streamData.ready) console.log(d3data.current()[0].values.length)
-            // console.log(slice);
+            
+            console.log("slice received")
+            console.log(JSON.parse(slice))
+            // var sTmp = JSON.parse(slice);
 
-            for (var j = 0; j < datapoint.length; j++) {
 
-              // console.log(datapoint);
-              d3data.update(datapoint[j].keyword, datapoint[j].sliceid, datapoint[j].count);
+            var s = new $window.slicer.Slice(slice);
 
-            };
+            console.log("create Slice Object with", s.words.length,' words')
+            
+
+            console.log(s);
+
+            d3data.updateSlice(s);
+            console.log("d3data : ", d3data.current())
 
         })
 
