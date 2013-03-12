@@ -64,7 +64,7 @@ function Stream() {
         nv.addGraph(function() {
 
             var chart = nv.models.stackedAreaChart()
-                              .x( function(d) { return d.x } )
+                              .x( function(d) { return parseInt(d.x) } )
                               .y( function(d) { return d.y } )
                               .color(keyColor)
                               .showLegend(false)
