@@ -34,9 +34,8 @@ app.controller('MainCtrl', function($scope, $locale, $filter, d3data) {
         var diff = 42+ 50+ $("#flow").height() +160;
         // var diff = $('#flow').height(), $('#toolbar').height(), $("#topbar").height();
 
-        console.log($('#flow').height(), $('#toolbar').height(), $("#topbar").height())
-
-        console.log(diff);
+        // console.log($('#flow').height(), $('#toolbar').height(), $("#topbar").height())s
+        // console.log(diff);
         return window.innerHeight - diff;
 
     };
@@ -223,10 +222,10 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
 
             var s = new $window.slicer.Slice(slice);
 
-            console.log("create Slice Object with", s.words.length,' words')
+            // console.log("create Slice Object with", s.words.length,' words')
             
 
-            console.log(s);
+            // console.log(s);
 
             d3data.updateSlice(s);
             console.log("d3data : ", d3data.current())
