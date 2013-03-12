@@ -69,7 +69,7 @@ app.controller('MainCtrl', function($scope, $locale, $filter, d3data) {
 app.controller('FeedCtrl', function($scope, apiClient, socket) {
 
     // Default values
-    var wordCount = 5;
+    var wordCount = 10;
 
     apiClient.setDemographics("Both","All","All");
     apiClient.setRealtime("second", 10);

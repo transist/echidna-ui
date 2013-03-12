@@ -93,7 +93,8 @@
 .keywords-inner {
     padding: 12px;
     position: absolute;
-    z-index: 1031
+    z-index: 1031;
+    width: 50%
 }
 
 .popover {
