@@ -156,7 +156,6 @@ app.controller('FeedCtrl', function($scope, feedconfig, socket) {
 
 })
 
-
 app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $window, d3data, socket) {
 
     /* VARIABLES --------------------------------------------------------------
