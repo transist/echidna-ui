@@ -64,22 +64,32 @@ function Stream() {
         nv.addGraph(function() {
 
             var chart = nv.models.stackedAreaChart()
-                              .x( function(d) { return d.x } )
+                              .x( function(d) { return parseInt(d.x) } )
                               .y( function(d) { return d.y } )
                               .color(keyColor)
                               .showLegend(false)
                               .showControls(false)
-                          // .attr("id", function(d) { return d[1] })
-                          // .clipEdge(true);
-            // // console.log(scope.chart);
+                              .margin({top:0,right:0,bottom:20,left:0})
+                              ;
+            
             chart.xAxis
-                .tickFormat(function(d) { return d3.time.format('%X')(new Date(d)) });
+                .tickFormat(function(d) { return d3.time.format('%X')(new Date(d)) })
+                .orient("top")
+                // .tickPadding(0)
 
             chart.yAxis
-                .tickFormat(d3.format(''));
+                .tickFormat( d3.format('.,') )
+                .orient("right")
+                // .tickPadding(0)
+                // .attr("transform", "translate(0,30)");
+            
 
-             d3.select("#stream-viz")
-                  .datum( newVal )
+            
+
+            // console.log(chart.margin());
+
+            d3.select("#stream-viz")
+                    .datum( newVal )
                     .transition().duration(500).call(chart);
 
             nv.utils.windowResize(chart.update);
@@ -106,6 +116,12 @@ function Stream() {
     stream.redraw = function (newVal, scope) {    
 
         // console.log("redraw")
+        //     
+        d3.select('nv-wrap.nv-stackedAreaChart')
+            .attr("transform","translate(0,0)");
+
+         //     .enter("g")
+        //     .translate("0,0");
 
         scope.svg
           .datum( newVal )
@@ -292,4 +308,11 @@ function redrawVenn(newVal, scope, callback) {
 }
 
 
+app.directive('onWindowResize', function () {
+
+    return function (scope, element, attrs) { 
+
+    }
+
+})
 

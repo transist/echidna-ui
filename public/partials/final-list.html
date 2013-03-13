@@ -1,10 +1,11 @@
 <!-- <h3>Your list</h3> -->
+
 <div 
-  class="dropzone rounded-corners" 
-  id="final-list" 
+  class="final-list-inner dropzone rounded-corners" 
   data-drop="true" 
   ng-model='list' 
   jqyoui-droppable="{ multiple:true  }"
+  ng-style="boxStyle"
   >
   <!-- <div ui:sortable class="unstyled row"> -->
   <ul class="unstyled">
@@ -20,11 +21,12 @@
 
       </li>
   </ul>
-  <p class="info">Drop keywords here</p>
+  <!-- <p class="info">Drop keywords here</p> -->
 </div>
+
 <div class="utils pull-right">
-    <a href="#" class="download"><i class=" icon-large icon-download-alt"></i></a>
-    <a href="" class="share"><i class=" icon-large icon-envelope"></i></a>
-    <a href="#" class="save" ng-click="saveToCsv(list, list)" ><i class=" icon-large icon-save"></i></a>
-    <a href="#" class="copy" ng-click="copyToClipboard(list)"><i class=" icon-large icon-copy"></i></a>
+    <a href="#" class="btn btn-small download"><i class=" icon-large icon-download-alt"></i></a>
+    <a href="" class="btn btn-small share"><i class=" icon-large icon-envelope"></i></a>
+    <a href="#" class="btn btn-small save" ng-click="saveToCsv(list, list)" ><i class=" icon-large icon-save"></i></a>
+    <a href="#" class="btn btn-small copy" ng-click="copyToClipboard(list)"><i class=" icon-large icon-copy"></i></a>
 </div>

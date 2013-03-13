@@ -1,7 +1,7 @@
 var _locales = {
         'en-us': {
 
-            "app name"      : "Keywords & Trends Generator",
+            "app name"      : "Echidna",
 
             // Top menu
             "menu home"         : "Home",
@@ -21,7 +21,7 @@ var _locales = {
 
         'zh-cn': {
 
-            "app name" : "美丽的关联词",
+            "app name" : "Echidna",
 
             // Top menu
             "menu home"     : "首页",

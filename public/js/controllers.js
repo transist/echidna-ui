@@ -14,7 +14,7 @@ app.controller('MainCtrl', function($scope, $locale, $filter, d3data) {
 
         $scope.keywords = d3data.current();
 
-        console.log($scope);
+        // console.log($scope);
 
         $scope.modal = {content: 'Hello Modal', saved: false};
 
@@ -27,6 +27,36 @@ app.controller('MainCtrl', function($scope, $locale, $filter, d3data) {
             $scope.locale = $filter('i18n')('Language: %1', $locale.id);
         }
 
+    /* resize window */
+
+    var computeWidth = function() {
+
+        var diff = 42+ 50+ $("#flow").height() +160;
+        // var diff = $('#flow').height(), $('#toolbar').height(), $("#topbar").height();
+
+        // console.log($('#flow').height(), $('#toolbar').height(), $("#topbar").height())s
+        // console.log(diff);
+        return window.innerHeight - diff;
+
+    };
+
+
+    // console.log()
+    $scope.boxStyle = {height: computeWidth() + 'px'};
+    
+    angular.element(document).on('ready', function() {
+        $scope.boxStyle.height = computeWidth() + 'px';
+        $scope.$apply();        
+    })
+
+    angular.element(window).bind('resize', function() {
+
+        $scope.boxStyle.height = computeWidth() + 'px';
+        $scope.$apply();
+
+    });
+
+
 
     /* SAVE METHODS --------------------------------------------------------------
         */
@@ -36,26 +66,26 @@ app.controller('MainCtrl', function($scope, $locale, $filter, d3data) {
 
 });
 
-app.controller('FeedCtrl', function($scope, apiClient, socket) {
+app.controller('FeedCtrl', function($scope, feedconfig, socket) {
 
     // Default values
-    var wordCount = 5;
+    var wordCount = 10;
 
-    apiClient.setDemographics("Both","All","All");
-    apiClient.setRealtime("second", 30);
-    apiClient.setWordCount(wordCount);
+    feedconfig.setDemographics("Both","All","All");
+    feedconfig.setRealtime("second", 10);
+    feedconfig.setWordCount(wordCount);
     $scope.samples = wordCount;
     $scope.sampling = 0;
-    $scope.samplings = apiClient.validSampling;
+    $scope.samplings = feedconfig.validSampling;
 
     // instance to be watched within the scope
-    $scope.filter = apiClient;
+    $scope.filter = feedconfig;
 
     $scope.setAge = function(age) {
 
         // console.log("age : "+age);
         $scope.filter.age = age;
-        apiClient.setAgeRange(age);
+        feedconfig.setAgeRange(age);
 
     }
 
@@ -63,14 +93,14 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
 
         // console.log("gender : "+gender);
         $scope.filter.gender = gender
-        apiClient.setGender(gender)
+        feedconfig.setGender(gender)
 
     }
 
     $scope.setTier = function(tier) {
 
         $scope.filter.tier = tier;
-        apiClient.setTier(tier);
+        feedconfig.setTier(tier);
         
     }
 
@@ -78,16 +108,16 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
     $scope.setStreamSize = function (size) {
 
         $scope.filter.samples = size;
-        apiClient.setWordCount(size);
+        feedconfig.setWordCount(size);
 
     }
             
     // set time sampling
     $scope.setSampling = function (index) {
 
-        apiClient.setSampling(apiClient.validSampling[index])
-        $scope.filter.sampling = apiClient.validSampling[index];
-        return apiClient.sampling;
+        feedconfig.setSampling(feedconfig.validSampling[index])
+        $scope.filter.sampling = feedconfig.validSampling[index];
+        return feedconfig.sampling;
         
     } 
 
@@ -96,13 +126,11 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
 
         console.log("set up timerange", start, end);
 
-
-
         // $scope.filter.start = start;
-        // apiClient.SetStart(start);
+        // feedconfig.SetStart(start);
 
         // $scope.filter.end = end;
-        // apiClient.setEnd(end);
+        // feedconfig.setEnd(end);
         
     }
 
@@ -114,12 +142,6 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
 
             socket.emit('feedconfig', apiClient.toJSON());
 
-            // if($scope.ready == false) {
-
-            //     socket.emit('client:ready');
-            //     $scope.ready = true;
-            // }
-            // console.log(apiClient);
 
         }
 
@@ -148,14 +170,12 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
     /* SOCKET API & DATA --------------------------------------------------------------
         */
 
-        console.log(d3data);
+        // console.log(d3data);
 
-        d3data.setXValues(30);
+        d3data.setXValues(20);
 
         // update data on each value
         d3data.on("updated", function() {
-
-            console.log("updated", $scope.streamGraph.ready);
 
             // update data
             $scope.streamData = d3data.current();
@@ -163,7 +183,7 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
             // init graph
             if ($scope.streamGraph.ready == false && !$scope.initStream ) {
 
-                console.log("init")
+                // console.log("init")
 
                 $scope.streamGraph.init($scope.streamData, $scope.colors, function (chart) {
 
@@ -176,6 +196,11 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
 
         })
 
+        socket.on('connect', function () {
+            
+            console.log('socket.io connected');
+
+        });
 
         socket.on('slice', function (slice) {
 
@@ -183,20 +208,6 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
             var s = new $window.slicer.Slice(slice);
 
             d3data.updateSlice(s);
-            console.log(s);
-
-            // d3data.update(slice.name, slice.time, slice.count);
-            // console.log("receiving slice")
-            
-            // if(d3data.current()[0]) console.log(d3data.current()[0].values.length)
-            // if($scope.streamData.ready) console.log(d3data.current()[0].values.length)
-            // console.log(slice);
-
-            
-
-              // console.log(datapoint);
-
-            
 
         })
 
@@ -259,6 +270,17 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
 
             };
             
+        }
+
+
+        $scope.addTolist  =  function (item) {
+            
+            // console.log(item)
+            // console.log($scope.$parent.list)
+            item.state = "disabled";
+            $scope.$parent.list.push(item);
+
+
         }
 
 
@@ -332,7 +354,7 @@ function addSliceToStream(streamData, numberItems, slice, callback) {
 
     if(numberItems != streamData.length ) diff = numberItems - streamData.length;
 
-    // console.log("required Items : "+ apiClient.numberItems, "difference : " +diff);
+    // console.log("required Items : "+ feedconfig.numberItems, "difference : " +diff);
 
     for (var i = 0; i < slice[0].length; i++) {
 
@@ -381,7 +403,7 @@ function addSliceToStream(streamData, numberItems, slice, callback) {
     // console.log(streamTmp)
     callback(streamTmp)
 
-    // apiClient.streamData = streamTmp;
+    // feedconfig.streamData = streamTmp;
 
 }
 

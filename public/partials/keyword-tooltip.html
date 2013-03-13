@@ -1,22 +1,23 @@
 <!-- Popover (external ./partials/popover.html or inline ng-template)  -->
-<div class="row">
+<!-- <div class="row"> -->
     <button type="button" class="close" ng-click="dismiss()">×</button>
-    <div class="span4">
+    <!-- <div class="span4"> -->
         <h4 style="color: {{ colors($index) }}">{{item.key}}</h4>    
-    </div>
-    <div class="span4">
+    <!-- </div> -->
+    <!-- <div class="span4"> -->
         <!-- {{item}} -->
         <p ng-bind-html-unsafe="popover.content"></p>  
-    </div>
-    <div class="span4">
+    <!-- </div> -->
+    <!-- <div class="span4"> -->
     
         <form name="popoverForm">
           
           <div class="form-actions">
             <p>
-                <a href="#">
+                <a href="#" ng-click="addTolist( item )">
                     <i class="icon-plus-sign"></i>
                     Add to list
+
             </a>
             </p>
             <p>
@@ -29,5 +30,5 @@
             <!-- <button type="button" class="btn close-popover" >Close</button> -->
           </div>
         </form>
-    </div>
-</div>
+    <!-- </div> -->
+<!-- </div> -->
