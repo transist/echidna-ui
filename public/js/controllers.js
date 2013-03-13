@@ -134,14 +134,21 @@ app.controller('FeedCtrl', function($scope, feedconfig, socket) {
         
     }
 
-    // $scope.ready = false;
+    $scope.ready = false;
 
     $scope.$watch('filter', function (newVal) {
 
         if(newVal){
 
-            socket.emit('feedconfig', apiClient.toJSON());
+            if($scope.ready == false) {
 
+                socket.emit('client:ready');
+                $scope.ready = true;
+
+            }
+
+            // console.log(feedconfig);
+            socket.emit('feedconfig', feedconfig.toJSON());
 
         }
 
@@ -166,6 +173,7 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
         $scope.streamType = "stack";
         
         // $scope.$$childHead.chart.style = $scope.streamType;
+
 
     /* SOCKET API & DATA --------------------------------------------------------------
         */
@@ -205,9 +213,20 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
         socket.on('slice', function (slice) {
 
             
+            // console.log("slice received")
+            // console.log(JSON.parse(slice))
+            // var sTmp = JSON.parse(slice);
+
+
             var s = new $window.slicer.Slice(slice);
 
+            // console.log("create Slice Object with", s.words.length,' words')
+            
+
+            // console.log(s);
+
             d3data.updateSlice(s);
+            // console.log("d3data : ", d3data.current())
 
         })
 
