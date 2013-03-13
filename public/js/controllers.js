@@ -14,7 +14,7 @@ app.controller('MainCtrl', function($scope, $locale, $filter, d3data) {
 
         $scope.keywords = d3data.current();
 
-        console.log($scope);
+        // console.log($scope);
 
         $scope.modal = {content: 'Hello Modal', saved: false};
 
@@ -66,26 +66,26 @@ app.controller('MainCtrl', function($scope, $locale, $filter, d3data) {
 
 });
 
-app.controller('FeedCtrl', function($scope, apiClient, socket) {
+app.controller('FeedCtrl', function($scope, feedconfig, socket) {
 
     // Default values
     var wordCount = 10;
 
-    apiClient.setDemographics("Both","All","All");
-    apiClient.setRealtime("second", 10);
-    apiClient.setWordCount(wordCount);
+    feedconfig.setDemographics("Both","All","All");
+    feedconfig.setRealtime("second", 10);
+    feedconfig.setWordCount(wordCount);
     $scope.samples = wordCount;
     $scope.sampling = 0;
-    $scope.samplings = apiClient.validSampling;
+    $scope.samplings = feedconfig.validSampling;
 
     // instance to be watched within the scope
-    $scope.filter = apiClient;
+    $scope.filter = feedconfig;
 
     $scope.setAge = function(age) {
 
         // console.log("age : "+age);
         $scope.filter.age = age;
-        apiClient.setAgeRange(age);
+        feedconfig.setAgeRange(age);
 
     }
 
@@ -93,14 +93,14 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
 
         // console.log("gender : "+gender);
         $scope.filter.gender = gender
-        apiClient.setGender(gender)
+        feedconfig.setGender(gender)
 
     }
 
     $scope.setTier = function(tier) {
 
         $scope.filter.tier = tier;
-        apiClient.setTier(tier);
+        feedconfig.setTier(tier);
         
     }
 
@@ -108,16 +108,16 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
     $scope.setStreamSize = function (size) {
 
         $scope.filter.samples = size;
-        apiClient.setWordCount(size);
+        feedconfig.setWordCount(size);
 
     }
             
     // set time sampling
     $scope.setSampling = function (index) {
 
-        apiClient.setSampling(apiClient.validSampling[index])
-        $scope.filter.sampling = apiClient.validSampling[index];
-        return apiClient.sampling;
+        feedconfig.setSampling(feedconfig.validSampling[index])
+        $scope.filter.sampling = feedconfig.validSampling[index];
+        return feedconfig.sampling;
         
     } 
 
@@ -126,13 +126,11 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
 
         console.log("set up timerange", start, end);
 
-
-
         // $scope.filter.start = start;
-        // apiClient.SetStart(start);
+        // feedconfig.SetStart(start);
 
         // $scope.filter.end = end;
-        // apiClient.setEnd(end);
+        // feedconfig.setEnd(end);
         
     }
 
@@ -149,8 +147,8 @@ app.controller('FeedCtrl', function($scope, apiClient, socket) {
 
             }
 
-            // console.log(apiClient);
-            socket.emit('feedconfig', apiClient.toJSON());
+            // console.log(feedconfig);
+            socket.emit('feedconfig', feedconfig.toJSON());
 
         }
 
@@ -180,7 +178,7 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
     /* SOCKET API & DATA --------------------------------------------------------------
         */
 
-        console.log(d3data);
+        // console.log(d3data);
 
         d3data.setXValues(20);
 
@@ -193,7 +191,7 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
             // init graph
             if ($scope.streamGraph.ready == false && !$scope.initStream ) {
 
-                console.log("init")
+                // console.log("init")
 
                 $scope.streamGraph.init($scope.streamData, $scope.colors, function (chart) {
 
@@ -215,8 +213,8 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
         socket.on('slice', function (slice) {
 
             
-            console.log("slice received")
-            console.log(JSON.parse(slice))
+            // console.log("slice received")
+            // console.log(JSON.parse(slice))
             // var sTmp = JSON.parse(slice);
 
 
@@ -228,7 +226,7 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
             // console.log(s);
 
             d3data.updateSlice(s);
-            console.log("d3data : ", d3data.current())
+            // console.log("d3data : ", d3data.current())
 
         })
 
@@ -291,6 +289,17 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
 
             };
             
+        }
+
+
+        $scope.addTolist  =  function (item) {
+            
+            // console.log(item)
+            // console.log($scope.$parent.list)
+            item.state = "disabled";
+            $scope.$parent.list.push(item);
+
+
         }
 
 
@@ -364,7 +373,7 @@ function addSliceToStream(streamData, numberItems, slice, callback) {
 
     if(numberItems != streamData.length ) diff = numberItems - streamData.length;
 
-    // console.log("required Items : "+ apiClient.numberItems, "difference : " +diff);
+    // console.log("required Items : "+ feedconfig.numberItems, "difference : " +diff);
 
     for (var i = 0; i < slice[0].length; i++) {
 
@@ -413,7 +422,7 @@ function addSliceToStream(streamData, numberItems, slice, callback) {
     // console.log(streamTmp)
     callback(streamTmp)
 
-    // apiClient.streamData = streamTmp;
+    // feedconfig.streamData = streamTmp;
 
 }
 

@@ -1,7 +1,7 @@
 /* Services */
 // console.log(window);
 
-app.factory('apiClient', function($window) {
+app.factory('feedconfig', function($window) {
     
     // return new ApiClient();
     return new $window.feedconfig.FeedConfig();

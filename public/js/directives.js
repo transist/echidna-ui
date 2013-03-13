@@ -86,7 +86,7 @@ function Stream() {
 
             
 
-            console.log(chart.margin());
+            // console.log(chart.margin());
 
             d3.select("#stream-viz")
                     .datum( newVal )
