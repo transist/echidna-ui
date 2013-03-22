@@ -116,7 +116,7 @@ function Stream() {
     stream.redraw = function (newVal, scope) {    
 
         // console.log("redraw")
-        //     
+        // TODO: is this translate 0,0 really useful?    
         d3.select('nv-wrap.nv-stackedAreaChart')
             .attr("transform","translate(0,0)");
 
