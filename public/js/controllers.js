@@ -78,85 +78,70 @@ app.controller('FeedCtrl', function($scope, feedconfig, socket) {
     $scope.sampling = 0;
     $scope.samplings = feedconfig.validSampling;
 
-    // instance to be watched within the scope
+    // we take the instance from the service and keep a reference in scope
     $scope.filter = feedconfig;
 
+    // we create funtions for partials because we want
     $scope.setAge = function(age) {
-
         // console.log("age : "+age);
+        // TODO: filter is a reference to feedconfig, so why set both?
         $scope.filter.age = age;
         feedconfig.setAgeRange(age);
-
     }
 
     $scope.setGender = function(gender) {
-
         // console.log("gender : "+gender);
         $scope.filter.gender = gender
         feedconfig.setGender(gender)
-
     }
 
     $scope.setTier = function(tier) {
-
         $scope.filter.tier = tier;
-        feedconfig.setTier(tier);
-        
+        feedconfig.setTier(tier);  
     }
 
     // set number of keywords
     $scope.setStreamSize = function (size) {
-
         $scope.filter.samples = size;
         feedconfig.setWordCount(size);
-
     }
             
-    // set time sampling
+    // set time sampling; this maps directly to the UI slider range
     $scope.setSampling = function (index) {
-
         feedconfig.setSampling(feedconfig.validSampling[index])
         $scope.filter.sampling = feedconfig.validSampling[index];
         return feedconfig.sampling;
-        
     } 
 
     // set timeRange
     $scope.setTimerange = function (start,end) {
-
+        // TODO: depends on historical data support on the server-side
         console.log("set up timerange", start, end);
-
         // $scope.filter.start = start;
         // feedconfig.SetStart(start);
-
         // $scope.filter.end = end;
-        // feedconfig.setEnd(end);
-        
+        // feedconfig.setEnd(end); 
     }
 
     $scope.ready = false;
 
+    // filter is actually the local scope reference to feedconfig
     $scope.$watch('filter', function (newVal) {
-
-        if(newVal){
-
-            if($scope.ready == false) {
-
-                socket.emit('client:ready');
-                $scope.ready = true;
-
-            }
-
+        if(newVal) {
             // console.log(feedconfig);
+            // we emit the new value to the server
             socket.emit('feedconfig', feedconfig.toJSON());
-
+            // don't want the stream to be drawn until we get at least one value
+            $scope.ready = true;
+            // TODO: we should also reset the streamData (need to provide it from service)
         }
-
     }, true)
 
 })
 
-
+// TODO: remove $http
+// d3data is tasked with converting from datapoints in the feed to d3 compatible object
+// TODO: 
 app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $window, d3data, socket) {
 
     /* VARIABLES --------------------------------------------------------------
@@ -186,6 +171,7 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
         d3data.on("updated", function() {
 
             // update data
+            // TODO: take the streamData as reference and update directly
             $scope.streamData = d3data.current();
 
             // init graph
@@ -210,21 +196,16 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
 
         });
 
-        socket.on('slice', function (slice) {
-
-            
+        socket.on('slice', function (slice) {        
             // console.log("slice received")
             // console.log(JSON.parse(slice))
             // var sTmp = JSON.parse(slice);
 
-
+            // slicer is actually slice module; we instanciate from the JSON object
             var s = new $window.slicer.Slice(slice);
 
-            // console.log("create Slice Object with", s.words.length,' words')
-            
-
+            // console.log("create Slice Object with", s.words.length,' words')         
             // console.log(s);
-
             d3data.updateSlice(s);
             // console.log("d3data : ", d3data.current())
 
@@ -234,11 +215,11 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
         */
 
         // toggle stream on click
+        // BUG : when stream is updated, it prevents toggling to be displayed
         $scope.stackFocus = function stackFocus(index) {
             
             // console.log(index)
             var svg = d3.select("#stream-viz")
-                .attr("class", "blabla")
 
             svg.each(function(data) {
 
@@ -297,12 +278,13 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
             // console.log(item)
             // console.log($scope.$parent.list)
             item.state = "disabled";
+            // TODO: should get passed as a service instead of hierarchy reference
             $scope.$parent.list.push(item);
 
 
         }
 
-
+        // BUG : sometimes doesn't close the popover
         $("close-popover").click(function(e) {
             console.log("close it")
 
@@ -320,7 +302,6 @@ app.controller('StreamCtrl', function($scope, $document, $http, $timeout, $windo
             console.log(type)
             
             // console.log($scope)
-
             var style  = { style : type}
 
             // var chart = $scope.$$childHead.chart;
@@ -363,121 +344,6 @@ app.controller('compareCtrl', function($scope, $http){
 
 })
 
-
- // private functions 
-function addSliceToStream(streamData, numberItems, slice, callback) {
-    
-    var streamTmp = [];
-    // console.log(slice[0]);
-    var diff = 0; 
-
-    if(numberItems != streamData.length ) diff = numberItems - streamData.length;
-
-    // console.log("required Items : "+ feedconfig.numberItems, "difference : " +diff);
-
-    for (var i = 0; i < slice[0].length; i++) {
-
-        var keywordTmp = {};
-
-
-        if(i < streamData.length){
-
-            keywordTmp = streamData[i];
-            
-            // move all values up (see function Array.move below)
-            keywordTmp.values.move(keywordTmp.values.length, 0);
-
-            // remove oldest value
-            keywordTmp.values.pop();
-
-            // console.log(keywordTmp)
-        
-        } else if (diff > 0  && i > streamData.length-1) {
-
-            // user has required more items
-            
-            keywordTmp.key = slice[0][i].keyword;
-            
-            console.log("Added Item")
-
-            keywordTmp.values = []
-            for (var j = 0; j < streamLength; j++) {
-                
-                keywordTmp.values.push([0 , new Date()-j*1000]) //populate with 0 values
-                
-            };
-
-            // console.log(keywordTmp)
-            // console.log(i, slice[0])
-
-        }
-
-
-        // add last value to keyword
-        keywordTmp.values[0] = [ slice[0][i].count, slice[0][i].sliceid ];
-
-        streamTmp.push(keywordTmp);
-
-    };
-    // console.log(streamTmp)
-    callback(streamTmp)
-
-    // feedconfig.streamData = streamTmp;
-
-}
-
-function addPoint (newPoint, streamData, callback) {
-    console.log(streamData[0].values.length)
-
-    for (var i = 0; i < newPoint.length; i++) { //loop through each keywords
-
-        streamData[i].values.shift(); // trim first point
-
-        //populate with the new value
-        streamData[i].values.push([newPoint[i].count,newPoint[i].sliceid])
-
-    };
-
-}
-
-function updateKeywordList(data, list, callback) {
-    
-    // console.log(data.length)
-
-    var keywords = [];
-    var existing = false;
-
-    for (var i = 0; i < data.length; i++) {
-        
-        var kw = {};
-        kw.state = "enabled";
-        kw.drag = true;
-        kw.key = data[i].key;
-
-        for (var j = list.length - 1; j >= 0; j--) {
-            
-            if(list[j].key == data[i].key ) existing = true;
-
-        };
-
-        if(!existing) { // keyword already in the list
-            kw.state =  "enabled";
-            kw.drag  =  "true";
-        }
-        else {
-            kw.state = "active";
-            kw.drag  = "false";
-        }
-
-        keywords.push(kw);
-
-    };
-
-    callback(keywords);
-
-}
-
-
 // EXPORT
 
 function saveToCsv (rawData) {
@@ -486,24 +352,7 @@ function saveToCsv (rawData) {
     var keys = listToArray(rawData);
 
     var convertToCSV = function(data) { 
-
         return keys.join(',');       
-
-        /*
-        var orderedData = [];
-        for (var i = 0, iLen = data.length; i < iLen; i++) {
-            temp = data[i];
-            for (var j = 0, jLen = temp.length; j < jLen; j++) {
-
-                if (!orderedData[j]) {
-                    orderedData.push([temp[j]]);
-                } else {
-                    orderedData[j].push(temp[j]);
-                }
-            }
-        }
-        return keys.join(',') + '\r\n' + orderedData.join('\r\n');
-        */
     }
 
     var str = convertToCSV(data, keys);
@@ -531,9 +380,3 @@ function listToArray(list) {
     return tmp;
 
 }
-
-Array.prototype.diff = function(a) {
-
-    return this.filter(function(i) {return !(a.indexOf(i) > -1);});
-
-};
